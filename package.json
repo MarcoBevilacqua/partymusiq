@@ -1,0 +1,35 @@
+{
+  "name": "partymusiq",
+  "version": "0.0.1",
+  "description": "Social Party Music App",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "DEBUG=* nodemon -e js,json,styl server.js",
+    "lint:code": "eslint -c eslint-config-hapi .",
+    "lint:fix": "eslint --fix  -c eslint-config-hapi .",
+    "lint:tutorials": "eslint --ext .md lib/tutorials",
+    "test": "npm run lint:code && npm run lint:tutorials"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarcoBevilacqua/partymusiq.git"
+  },
+  "keywords": [
+    "music",
+    "social",
+    "app",
+    "hapi",
+    "node"
+  ],
+  "author": "Marco Bevilacqua",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarcoBevilacqua/partymusiq/issues"
+  },
+  "homepage": "https://github.com/MarcoBevilacqua/partymusiq#readme",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.1",
+    "nodemon": "^2.0.15"
+  }
+}
