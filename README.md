@@ -1,2 +1,2 @@
 # partymusiq
-Socia party music app
+Social party music app
