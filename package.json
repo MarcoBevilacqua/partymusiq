@@ -4,10 +4,8 @@
   "description": "Social Party Music App",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node index.js",
     "dev": "nodemon -e js,json,styl index.js",
-    "lint:code": "eslint -c eslint-config-hapi .",
-    "lint:fix": "eslint --fix  -c eslint-config-hapi .",
     "lint:tutorials": "eslint --ext .md lib/tutorials",
     "test": "npm run lint:code && npm run lint:tutorials"
   },
@@ -30,6 +28,7 @@
   "homepage": "https://github.com/MarcoBevilacqua/partymusiq#readme",
   "dependencies": {
     "@hapi/hapi": "^20.2.1",
+    "mongoose": "^6.1.2",
     "nodemon": "^2.0.15"
   }
 }
