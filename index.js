@@ -1,7 +1,6 @@
 "use strict";
 
 const Hapi = require("@hapi/hapi");
-const db = require("./database").db;
 
 const init = async () => {
   const server = Hapi.server({
@@ -9,13 +8,19 @@ const init = async () => {
     host: "localhost",
   });
 
-  server.route({
-    method: "GET",
-    path: "/",
-    handler: (request, h) => {
-      return "Hello Hapi World!";
+  await server.register({
+    plugin: require("hapi-mongodb"),
+    options: {
+      url: "mongodb://localhost:27018/partymusiq",
+      settings: {
+        useUnifiedTopology: true,
+      },
+      decorate: true,
     },
   });
+
+  const routes = require("./routes");
+  server.route(routes);
 
   await server.start();
   console.log("Server running on %s", server.info.uri);
