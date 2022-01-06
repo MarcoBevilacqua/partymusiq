@@ -1,6 +1,8 @@
 const Joi = require("@hapi/joi");
 Joi.objectId = require("joi-objectid")(Joi);
 
+const partyValidateSchema = require("./models/Party");
+
 module.exports = [
   {
     method: "GET",
@@ -9,13 +11,7 @@ module.exports = [
       return "Hello Hapi World!";
     },
   },
-  {
-    method: "GET",
-    path: "/hello/{user}",
-    handler: function (request, h) {
-      return `Hello ${request.params.user}!`;
-    },
-  },
+
   {
     method: "GET",
     path: "/party",
@@ -46,6 +42,11 @@ module.exports = [
   {
     method: "POST",
     path: "/party",
+    options: {
+      validate: {
+        payload: partyValidateSchema.partyCreate,
+      },
+    },
     handler: async (request, h) => {
       const payload = request.payload;
       const party = await request.mongo.db.collection("parties").insertOne(payload);
@@ -54,7 +55,7 @@ module.exports = [
   },
   {
     method: "PUT",
-    path: "/parties/{id}",
+    path: "/party/{id}",
     options: {
       validate: {
         params: Joi.object({
@@ -71,8 +72,8 @@ module.exports = [
     },
   },
   {
-    method: "PUT",
-    path: "/movies/{id}",
+    method: "DELETE",
+    path: "/party/{id}",
     options: {
       validate: {
         params: Joi.object({

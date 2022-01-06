@@ -1,8 +1,11 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const Joi = require("joi");
 
-var PartySchema = new Schema({
-  title: String,
-});
+const PartySchema = {
+  partyCreate: Joi.object({
+    title: Joi.string().required(),
+    starting: Joi.date().required().greater("now"),
+    users: Joi.array().items(Joi.link("#user")),
+  }),
+};
 
-module.exports = mongoose.model("Party", PartySchema);
+module.exports = PartySchema;

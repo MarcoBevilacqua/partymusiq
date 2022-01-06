@@ -4,6 +4,7 @@
   "description": "Social Party Music App",
   "main": "index.js",
   "scripts": {
+    "build": "npm build",
     "start": "node index.js",
     "dev": "nodemon -e js,json,styl index.js",
     "lint:tutorials": "eslint --ext .md lib/tutorials",
