@@ -1,11 +1,24 @@
-FROM node:12
+FROM node:14
+
 # Create app directory
 WORKDIR /usr/src/app
+
+# Install nodemon
+RUN npm install -g nodemon
+
 # Install app dependencies
-COPY package*.json ./
-RUN npm install
-# Copy app source code
+ADD package.json ./
+COPY package-lock.json ./
+RUN npm i --silent
+
+# Copy in the source
 COPY . .
-#Expose port and start application
-EXPOSE 8080
-CMD [ "npm", "run", "dev" ]
+
+# Don't use root user
+USER node
+
+# Expose Port
+EXPOSE 3000
+
+# Run the app
+CMD ["node", "index.js"]
