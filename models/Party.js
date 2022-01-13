@@ -1,10 +1,13 @@
 const Joi = require("joi");
 
 const PartySchema = {
-  partyCreate: Joi.object({
+  create: Joi.object({
     title: Joi.string().required(),
     starting: Joi.date().required().greater("now"),
     host: Joi.string().required(),
+  }),
+  update: Joi.object({
+    playlist: Joi.array().required(),
   }),
 };
 

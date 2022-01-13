@@ -3,7 +3,6 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 const partyValidateSchema = require("./models/Party");
 const userValidateSchema = require("./models/User");
-const playlistValidateSchema = require("./models/Playlist");
 
 module.exports = [
   {
@@ -37,7 +36,7 @@ module.exports = [
       const ObjectID = request.mongo.ObjectID;
       const party = await request.mongo.db
         .collection("parties")
-        .findOne({ _id: new ObjectID(id) }, { projection: { title: 1, description: 1 } });
+        .findOne({ _id: new ObjectID(id) }, { projection: { title: 1, description: 1, host: 1, playlist: 1 } });
       return party;
     },
   },
@@ -46,7 +45,7 @@ module.exports = [
     path: "/party",
     options: {
       validate: {
-        payload: partyValidateSchema.partyCreate,
+        payload: partyValidateSchema.create,
       },
     },
     handler: async (request, h) => {
@@ -57,20 +56,25 @@ module.exports = [
   },
   {
     method: "PUT",
-    path: "/party/{id}",
+    path: "/party/{partyId}",
     options: {
       validate: {
         params: Joi.object({
-          id: Joi.objectId(),
+          partyId: Joi.objectId(),
         }),
       },
     },
     handler: async (request, h) => {
-      const id = request.params.id;
-      const ObjectID = request.mongo.ObjectID;
+      console.log("Updating party with id " + request.params.partyId);
       const payload = request.payload;
-      const status = await request.mongo.db.collection("parties").updateOne({ _id: ObjectID(id) }, { $set: payload });
-      return status;
+      const ObjectID = request.mongo.ObjectID;
+      const updatedPartyPlaylist = await request.mongo.db
+        .collection("parties")
+        .findOneAndUpdate(
+          { _id: new ObjectID(request.params.partyId) },
+          { $addToSet: { playlist: { $each: payload.playlist } } }
+        );
+      return updatedPartyPlaylist;
     },
   },
   {
@@ -117,58 +121,6 @@ module.exports = [
       const payload = request.payload;
       const party = await request.mongo.db.collection("users").insertOne(payload);
       return party;
-    },
-  },
-  {
-    method: "GET",
-    path: "/playlist",
-    handler: async (request, h) => {
-      const offset = Number(request.query.offset) || 0;
-      const playlists = await request.mongo.db
-        .collection("playlists")
-        .find({})
-        .sort({ metacritic: -1 })
-        .skip(offset)
-        .limit(20)
-        .toArray();
-      return playlists;
-    },
-  },
-  {
-    method: "POST",
-    path: "/playlist",
-    options: {
-      validate: {
-        payload: playlistValidateSchema.playlistCreate,
-      },
-    },
-    handler: async (request, h) => {
-      const payload = request.payload;
-      const ObjectID = request.mongo.ObjectID;
-      const party = await request.mongo.db.collection("parties").findOne({ _id: new ObjectID(payload.partyId) });
-      if (!party) {
-        return "cannot find party!";
-      }
-      return await request.mongo.db.collection("playlists").insertOne(payload);
-    },
-  },
-  {
-    method: "PUT",
-    path: "/playlist/{partyId}",
-    options: {
-      validate: {
-        params: Joi.object({
-          partyId: Joi.objectId(),
-        }),
-        payload: playlistValidateSchema.playlistUpdate,
-      },
-    },
-    handler: async (request, h) => {
-      const payload = request.payload;
-      const updatedPartyPlaylist = await request.mongo.db
-        .collection("playlists")
-        .findOneAndUpdate({ partyId: request.params.partyId }, { $addToSet: { tracks: { $each: payload.tracks } } });
-      return updatedPartyPlaylist;
     },
   },
 ];
