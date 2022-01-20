@@ -12,7 +12,6 @@ module.exports = [
       return "Hello Hapi World!";
     },
   },
-
   {
     method: "GET",
     path: "/party",
@@ -41,6 +40,9 @@ module.exports = [
     },
   },
   {
+    /**
+     * create new party
+     */
     method: "POST",
     path: "/party",
     options: {
@@ -55,6 +57,9 @@ module.exports = [
     },
   },
   {
+    /**
+     * add song to party playlist
+     */
     method: "PUT",
     path: "/party/{partyId}",
     options: {
@@ -78,6 +83,9 @@ module.exports = [
     },
   },
   {
+    /**
+     * remove party
+     */
     method: "DELETE",
     path: "/party/{id}",
     options: {
@@ -110,6 +118,9 @@ module.exports = [
     },
   },
   {
+    /**
+     * register new user
+     */
     method: "POST",
     path: "/user",
     options: {
@@ -117,6 +128,54 @@ module.exports = [
         payload: userValidateSchema.userCreate,
       },
     },
+    handler: async (request, h) => {
+      const payload = request.payload;
+      const party = await request.mongo.db.collection("users").insertOne(payload);
+      return party;
+    },
+  },
+  {
+    /**
+     * party start reproducing
+     */
+    method: "POST",
+    path: "/party/{partyId}/start",
+    handler: async (request, h) => {
+      const payload = request.payload;
+      const party = await request.mongo.db.collection("users").insertOne(payload);
+      return party;
+    },
+  },
+  {
+    /**
+     * party pause reproducing
+     */
+    method: "POST",
+    path: "/party/{partyId}/pause",
+    handler: async (request, h) => {
+      const payload = request.payload;
+      const party = await request.mongo.db.collection("users").insertOne(payload);
+      return party;
+    },
+  },
+  {
+    /**
+     * party stop reproducing
+     */
+    method: "POST",
+    path: "/party/{partyId}/stop",
+    handler: async (request, h) => {
+      const payload = request.payload;
+      const party = await request.mongo.db.collection("users").insertOne(payload);
+      return party;
+    },
+  },
+  {
+    /**
+     * party skip next song
+     */
+    method: "POST",
+    path: "/party/{partyId}/skip",
     handler: async (request, h) => {
       const payload = request.payload;
       const party = await request.mongo.db.collection("users").insertOne(payload);
