@@ -29,6 +29,7 @@
   "homepage": "https://github.com/MarcoBevilacqua/partymusiq#readme",
   "dependencies": {
     "@hapi/hapi": "^20.2.1",
+    "@hapi/inert": "^7.0.0",
     "@hapi/joi": "^17.1.1",
     "hapi-mongodb": "^10.0.1",
     "joi-objectid": "^4.0.2",

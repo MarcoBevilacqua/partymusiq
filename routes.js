@@ -1,4 +1,5 @@
 const Joi = require("@hapi/joi");
+const Path = require("path");
 Joi.objectId = require("joi-objectid")(Joi);
 
 const partyValidateSchema = require("./models/Party");
@@ -7,9 +8,29 @@ const userValidateSchema = require("./models/User");
 module.exports = [
   {
     method: "GET",
+    path: "/js/{file*}",
+    handler: {
+      directory: {
+        path: "./client/dist/js",
+        listing: true,
+      },
+    },
+  },
+  {
+    method: "GET",
+    path: "/css/{file*}",
+    handler: {
+      directory: {
+        path: "./client/dist/css",
+        listing: true,
+      },
+    },
+  },
+  {
+    method: "GET",
     path: "/",
     handler: (request, h) => {
-      return "Hello Hapi World!";
+      return h.file("./client/dist/player.html");
     },
   },
   {
