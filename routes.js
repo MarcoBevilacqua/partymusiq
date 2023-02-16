@@ -1,5 +1,4 @@
 const Joi = require("@hapi/joi");
-const Path = require("path");
 Joi.objectId = require("joi-objectid")(Joi);
 
 const partyValidateSchema = require("./models/Party");
