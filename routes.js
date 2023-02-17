@@ -29,7 +29,7 @@ module.exports = [
     method: "GET",
     path: "/",
     handler: (request, h) => {
-      return h.file("./client/dist/player.html");
+      return "everything is fine";
     },
   },
   {
