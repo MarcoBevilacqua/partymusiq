@@ -55,7 +55,10 @@ module.exports = [
       const ObjectID = request.mongo.ObjectID;
       const party = await request.mongo.db
         .collection("parties")
-        .findOne({ _id: new ObjectID(id) }, { projection: { title: 1, description: 1, host: 1, playlist: 1 } });
+        .findOne(
+          { _id: new ObjectID(id) },
+          { projection: { title: 1, description: 1, host: 1, playlist: 1 } }
+        );
       return party;
     },
   },
@@ -72,7 +75,9 @@ module.exports = [
     },
     handler: async (request, h) => {
       const payload = request.payload;
-      const party = await request.mongo.db.collection("parties").insertOne(payload);
+      const party = await request.mongo.db
+        .collection("parties")
+        .insertOne(payload);
       return party;
     },
   },
@@ -118,7 +123,9 @@ module.exports = [
     handler: async (request, h) => {
       const id = request.params.id;
       const ObjectID = request.mongo.ObjectID;
-      const status = await request.mongo.db.collection("parties").deleteOne({ _id: ObjectID(id) });
+      const status = await request.mongo.db
+        .collection("parties")
+        .deleteOne({ _id: ObjectID(id) });
       return status;
     },
   },
@@ -150,7 +157,9 @@ module.exports = [
     },
     handler: async (request, h) => {
       const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
+      const party = await request.mongo.db
+        .collection("users")
+        .insertOne(payload);
       return party;
     },
   },
@@ -162,7 +171,9 @@ module.exports = [
     path: "/party/{partyId}/start",
     handler: async (request, h) => {
       const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
+      const party = await request.mongo.db
+        .collection("users")
+        .insertOne(payload);
       return party;
     },
   },
@@ -174,7 +185,9 @@ module.exports = [
     path: "/party/{partyId}/pause",
     handler: async (request, h) => {
       const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
+      const party = await request.mongo.db
+        .collection("users")
+        .insertOne(payload);
       return party;
     },
   },
@@ -186,7 +199,9 @@ module.exports = [
     path: "/party/{partyId}/stop",
     handler: async (request, h) => {
       const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
+      const party = await request.mongo.db
+        .collection("users")
+        .insertOne(payload);
       return party;
     },
   },
@@ -198,7 +213,9 @@ module.exports = [
     path: "/party/{partyId}/skip",
     handler: async (request, h) => {
       const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
+      const party = await request.mongo.db
+        .collection("users")
+        .insertOne(payload);
       return party;
     },
   },
