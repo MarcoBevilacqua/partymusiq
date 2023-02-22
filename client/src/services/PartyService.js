@@ -6,6 +6,6 @@ export async function getAllParties() {
 }
 
 export async function createParty(data) {
-  const response = await axios.post(`/api/party`, { data });
+  const response = await axios.post(`/api/party`, data);
   return response.data;
 }

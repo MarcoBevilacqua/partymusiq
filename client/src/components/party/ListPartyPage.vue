@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { getAllParties, createParty } from "../../services/PartyService";
+import { getAllParties } from "../../services/PartyService";
 export default {
   data() {
     return {
@@ -33,11 +33,6 @@ export default {
     goToCreateParty() {
       console.log("create party");
       this.$router.push("/party/add");
-    },
-    createParty() {
-      createParty(this.partyData).then((response) => {
-        console.log(response);
-      });
     },
   },
   mounted() {
