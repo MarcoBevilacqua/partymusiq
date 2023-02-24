@@ -16,11 +16,6 @@ export default {
   data() {
     return {
       parties: [],
-      partyData: {
-        title: "My Party with guests",
-        starting: "2023-10-10 22:00:00",
-        host: "63eeb777e020cc970877198d",
-      },
     };
   },
   methods: {

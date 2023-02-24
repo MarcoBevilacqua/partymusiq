@@ -1,8 +1,10 @@
 <template>
-  <div class="header">
-    <header>
-      <h2>PARTYMUSIQ</h2>
-    </header>
+  <div class="headerw-full md:w-auto">
+    <h2
+      class="text-2xl font-bold leading-7 text-white-900 sm:truncate sm:text-3xl sm:tracking-tight"
+    >
+      PARTYMUSIQ
+    </h2>
   </div>
   <slot></slot>
   <footer>
