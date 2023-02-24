@@ -1,9 +1,20 @@
 const Joi = require("@hapi/joi");
-const Path = require("path");
 Joi.objectId = require("joi-objectid")(Joi);
 
 const partyValidateSchema = require("./models/Party");
 const userValidateSchema = require("./models/User");
+
+const handleError = function (request, h, err) {
+  if (err.isJoi && Array.isArray(err.details) && err.details.length > 0) {
+    const invalidItem = err.details[0];
+    return h
+      .response(`${JSON.stringify(err.details)}`)
+      .code(400)
+      .takeover();
+  }
+
+  return h.response(err).takeover();
+};
 
 module.exports = [
   {
@@ -30,7 +41,7 @@ module.exports = [
     method: "GET",
     path: "/",
     handler: (request, h) => {
-      return h.file("./client/dist/player.html");
+      return "everything is fine";
     },
   },
   {
@@ -69,6 +80,7 @@ module.exports = [
     options: {
       validate: {
         payload: partyValidateSchema.create,
+        failAction: handleError,
       },
     },
     handler: async (request, h) => {
