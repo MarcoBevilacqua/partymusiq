@@ -51,8 +51,17 @@ module.exports = [
       const offset = Number(request.query.offset) || 0;
       const parties = await request.mongo.db
         .collection("parties")
-        .find({})
-        .sort({ metacritic: -1 })
+        .aggregate([
+          {
+            $lookup: {
+              from: "users",
+              let: { hostId: "$host" },
+              pipeline: [{ $project: { name: "$name" } }],
+              as: "host",
+            },
+          },
+        ])
+        .sort({ starting: 1 })
         .skip(offset)
         .limit(20)
         .toArray();
@@ -67,7 +76,7 @@ module.exports = [
       const ObjectID = request.mongo.ObjectID;
       const party = await request.mongo.db
         .collection("parties")
-        .findOne({ _id: new ObjectID(id) }, { projection: { title: 1, description: 1, host: 1, playlist: 1 } });
+        .findOne({ _id: new ObjectID(id) }, { projection: { title: 1, description: 1, playlist: 1 } });
       return party;
     },
   },

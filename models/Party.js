@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require("joi").extend(require("@joi/date"));
 
 const PartySchema = {
   create: Joi.object({
@@ -10,6 +10,7 @@ const PartySchema = {
     starting: Joi.date()
       .required()
       .greater("now")
+      .format("DD-MM-YYYY HH:mm")
       .error((errors) => {
         return errors;
       }),
