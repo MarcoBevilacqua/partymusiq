@@ -1,8 +1,6 @@
 <template>
   <base-layout>
-    <main>
-      <router-view></router-view>
-    </main>
+    <router-view></router-view>
   </base-layout>
 </template>
 

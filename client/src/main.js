@@ -2,16 +2,16 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import ListPartyPage from "./components/party/ListPartyPage.vue";
-import AddPartyPage from "./components/party/AddPartyPage.vue";
+import { AddParty, EditParty, ListParty } from "./components/party/index";
 
 import "./assets/main.css";
 
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [
-  { path: "/", component: ListPartyPage },
-  { path: "/party/add", component: AddPartyPage },
+  { path: "/", component: ListParty },
+  { path: "/party/add", component: AddParty },
+  { path: "/party/:id", component: EditParty, name: "edit-party" },
 ];
 
 // 3. Create the router instance and pass the `routes` option
