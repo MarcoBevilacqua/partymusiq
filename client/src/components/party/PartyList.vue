@@ -5,10 +5,7 @@
       class="cursor-pointer rounded-md bg-slate-100 px-2.5 py-1 text-md font-semibold"
       >{{ party.title }}</a
     >
-    <h4>
-      starting
-      {{ party.starting }}
-    </h4>
+    <h4>{{ party.starting }}</h4>
     <span>Created by: </span><span class="font-bold">{{ party.host }}</span>
   </div>
 </template>

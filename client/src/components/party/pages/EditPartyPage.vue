@@ -9,11 +9,6 @@
             Hi, welcome to {{ this.party.title }}
           </h2>
           <div id="player">
-            <h3
-              class="text-2xl mt-6 text-center font-extralight tracking-tight text-gray-900 sm:text-2xl"
-            >
-              Now Playing:
-            </h3>
             <div class="mt-2">
               <div id="playlist">
                 <playlist :playlist="this.party.playlist"></playlist>
