@@ -10,8 +10,8 @@
           </h2>
           <div id="player">
             <div class="mt-2">
-              <div id="playlist">
-                <playlist :playlist="this.party.playlist"></playlist>
+              <div id="playlist" v-if="this.party.playlist">
+                <playlist :songList="this.party.playlist"></playlist>
               </div>
             </div>
           </div>
@@ -34,10 +34,12 @@
 import { getSingleParty } from "../../../services/PartyService";
 import BaseLayout from "../../../base/BaseLayout.vue";
 import Playlist from "../../playlist/Playlist.vue";
+import MusicSearch from "../../shared/MusicSearch.vue";
 export default {
   components: {
     BaseLayout,
     Playlist,
+    MusicSearch,
   },
   data() {
     return {
