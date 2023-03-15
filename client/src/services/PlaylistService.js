@@ -11,3 +11,10 @@ export async function addSongToPlaylist(partyId, songList) {
   });
   return response.data;
 }
+
+export async function removeSongFromPlaylist(partyId, song) {
+  const response = await axios.put("/api/party/" + partyId + "/playlist", {
+    song: song,
+  });
+  return response.data;
+}
