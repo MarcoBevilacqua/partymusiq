@@ -1,3 +1,4 @@
+const { payload } = require("@hapi/hapi/lib/validation");
 const Joi = require("@hapi/joi");
 const fs = require("fs");
 const fsMusicFolder = "./client/public/music";
@@ -132,9 +133,39 @@ module.exports = [
         .collection("parties")
         .findOneAndUpdate(
           { _id: new ObjectID(request.params.partyId) },
-          { $addToSet: { playlist: { $each: payload.playlist } } }
+          { $push: { playlist: payload.playlist[0] } },
+          { returnDocument: "after" }
         );
       return updatedPartyPlaylist;
+    },
+  },
+  {
+    /**
+     * remove song from party playlist
+     */
+    method: "PUT",
+    path: "/party/{partyId}/playlist",
+    options: {
+      validate: {
+        params: Joi.object({
+          partyId: Joi.objectId(),
+        }),
+      },
+    },
+    handler: async (request, h) => {
+      console.log("Updating playlist for party " + request.params.partyId);
+      const song = request.payload.song;
+      console.log("Removing song " + song);
+      const ObjectID = request.mongo.ObjectID;
+      const party = await request.mongo.db
+        .collection("parties")
+        .findOneAndUpdate(
+          { _id: new ObjectID(request.params.partyId) },
+          { $pull: { playlist: { $eq: song } } },
+          { returnDocument: "after" }
+        );
+
+      return party;
     },
   },
   {

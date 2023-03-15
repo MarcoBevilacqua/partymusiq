@@ -4,7 +4,11 @@
       v-if="!this.list.length || this.mode === 'add'"
       @add-to-playlist="addSongToPlaylist"
     ></music-search>
-    <player v-else :songList="this.list"></player>
+    <player
+      v-else
+      :songList="this.list"
+      @remove-from-playlist="this.removeSongFromPlaylist"
+    ></player>
     <div v-if="this.mode === 'list'" class="text-center mt-2">
       <a
         class="bg-indigo-200 rounded-sm p-2 font-lighter cursor-pointer"
@@ -25,7 +29,10 @@
 <script>
 import MusicSearch from "../shared/MusicSearch.vue";
 import Player from "../shared/Player.vue";
-import { addSongToPlaylist } from "../../services/PlaylistService";
+import {
+  addSongToPlaylist,
+  removeSongFromPlaylist,
+} from "../../services/PlaylistService";
 export default {
   components: {
     MusicSearch,
@@ -46,7 +53,13 @@ export default {
       addSongToPlaylist(this.$parent.party._id, songList).then((res) => {
         console.log(res);
         this.mode = "list";
-        this.list.push(res.playlist);
+        this.list = res.value.playlist;
+      });
+    },
+    removeSongFromPlaylist(song) {
+      removeSongFromPlaylist(this.$parent.party._id, song).then((res) => {
+        console.log(res);
+        this.list = res.value.playlist;
       });
     },
   },
