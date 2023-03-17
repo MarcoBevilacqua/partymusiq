@@ -1,27 +1,16 @@
 <template>
-  <div class="text-center h-48">
-    <music-search
-      v-if="!this.list.length || this.mode === 'add'"
-      @add-to-playlist="addSongToPlaylist"
-    ></music-search>
-    <player
-      v-else
-      :songList="this.list"
-      @remove-from-playlist="this.removeSongFromPlaylist"
-    ></player>
-    <div v-if="this.mode === 'list'" class="text-center mt-2">
-      <a
-        class="bg-indigo-200 rounded-sm p-2 font-lighter cursor-pointer"
-        @click="this.mode = 'add'"
-        >Add new song</a
-      >
-    </div>
-    <div v-else>
-      <a
-        class="bg-indigo-200 rounded-sm p-2 font-lighter cursor-pointer"
-        @click="this.mode = 'list'"
-        >Back to playlist</a
-      >
+  <div class="flex flex-col justify-center text-center w-full">
+    <div class="w-96 mx-auto bg-gray-100 rounded-md text-center">
+      <music-search
+        v-if="!this.list.length || this.mode === 'add'"
+        @add-to-playlist="addSongToPlaylist"
+      ></music-search>
+      <player
+        v-else
+        :songList="this.list"
+        @switch-mode-to-add="switchMode"
+        @remove-from-playlist="this.removeSongFromPlaylist"
+      ></player>
     </div>
   </div>
 </template>
@@ -56,11 +45,18 @@ export default {
         this.list = res.value.playlist;
       });
     },
-    removeSongFromPlaylist(song) {
-      removeSongFromPlaylist(this.$parent.party._id, song).then((res) => {
+    removeSongFromPlaylist(songId) {
+      removeSongFromPlaylist(
+        this.$parent.party._id,
+        this.songList[songId]
+      ).then((res) => {
         console.log(res);
         this.list = res.value.playlist;
       });
+    },
+    switchMode(mode) {
+      console.log("switching to " + mode);
+      this.mode = mode;
     },
   },
   mounted() {
