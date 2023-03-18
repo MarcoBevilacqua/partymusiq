@@ -37,12 +37,9 @@ const init = async () => {
     },
 
     validate: async (request, session) => {
-      console.log("checking credentials: " + request.auth.credentials);
       const validAccount = request.auth.credentials === session.id;
 
       if (!validAccount) {
-        console.log("invalid request");
-        console.log(session.id);
         return { isValid: false };
       }
 
