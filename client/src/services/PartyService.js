@@ -1,5 +1,7 @@
 import axios from "axios";
 
+axios.defaults.withCredentials = true;
+
 export async function getAllParties() {
   const response = await axios.get("/api/party");
   return response.data;
