@@ -50,17 +50,22 @@ export default {
   },
   methods: {
     getAllParties() {
-      getAllParties().then((response) => {
-        this.parties = response.map((e) => {
-          let partyDate = new Date(e.starting);
-          return {
-            id: e._id,
-            starting: partyDate.toLocaleTimeString("it-IT", this.dateOptions),
-            host: e.host[0].name,
-            title: e.title,
-          };
+      getAllParties()
+        .then((response) => {
+          console.log(response);
+          this.parties = response.map((e) => {
+            let partyDate = new Date(e.starting);
+            return {
+              id: e._id,
+              starting: partyDate.toLocaleTimeString("it-IT", this.dateOptions),
+              host: e.host[0].name,
+              title: e.title,
+            };
+          });
+        })
+        .catch((err) => {
+          console.warn("AN ERROR OCCURRED: " + err);
         });
-      });
     },
     goToCreateParty() {
       console.log("create party");

@@ -89,17 +89,25 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { ref } from "vue";
 import { Dialog, DialogPanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
-
-const navigation = [
-  { name: "Product", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
-];
-
 const mobileMenuOpen = ref(false);
+export default {
+  data() {
+    return {
+      loggedInUser: {
+        name: "",
+        username: "",
+      },
+    };
+  },
+  methods: {
+    goToLogin() {
+      console.log("redirecting to login...");
+      this.$router.push("/login");
+    },
+  },
+};
 </script>
