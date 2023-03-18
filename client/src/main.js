@@ -2,6 +2,8 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 
+import Login from "./components/auth/Login.vue";
+import Register from "./components/auth/Register.vue";
 import { AddParty, EditParty, ListParty } from "./components/party/index";
 
 import "./assets/main.css";
@@ -9,7 +11,9 @@ import "./assets/main.css";
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [
-  { path: "/", component: ListParty },
+  { path: "/party", component: ListParty },
+  { path: "/login", component: Login, meta: { requiresAuth: false } },
+  { path: "/register", component: Register },
   { path: "/party/add", component: AddParty },
   { path: "/party/:id", component: EditParty, name: "edit-party" },
 ];
@@ -26,4 +30,5 @@ const router = createRouter({
 const app = createApp(App);
 
 app.use(router);
+
 app.mount("#app");

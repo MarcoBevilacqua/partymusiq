@@ -51,6 +51,7 @@ module.exports = [
       return filterByQuery;
     },
   },
+  //AUTH methods
   {
     method: "GET",
     path: "/",
@@ -59,8 +60,63 @@ module.exports = [
     },
   },
   {
+    method: "POST",
+    path: "/auth/register",
+    options: {
+      validate: {
+        payload: userValidateSchema.userCreate,
+        failAction: handleError,
+      },
+    },
+    handler: async (request, h) => {
+      const payload = request.payload;
+      const user = await request.mongo.db.collection("users").insertOne(payload);
+      return user;
+    },
+  },
+  {
+    method: "POST",
+    path: "/auth/login",
+    options: {
+      auth: {
+        mode: "try",
+      },
+    },
+    handler: async (request, h) => {
+      const payload = request.payload;
+      const user = await request.mongo.db.collection("users").findOne({
+        username: payload.username,
+        password: payload.password,
+      });
+      if (user) {
+        request.cookieAuth.set(user);
+        return h.response({ isValid: true, credentials: { name: user.name, username: user.username } });
+      }
+    },
+  },
+  {
+    method: "GET",
+    path: "/logout",
+    options: {
+      handler: (request, h) => {
+        request.cookieAuth.clear();
+        return true;
+      },
+    },
+  },
+  {
     method: "GET",
     path: "/party",
+    options: {
+      auth: {
+        mode: "try",
+      },
+      plugins: {
+        cookie: {
+          redirectTo: false,
+        },
+      },
+    },
     handler: async (request, h) => {
       const offset = Number(request.query.offset) || 0;
       const parties = await request.mongo.db
@@ -85,6 +141,11 @@ module.exports = [
   {
     method: "GET",
     path: "/party/{id}",
+    options: {
+      auth: {
+        mode: "try",
+      },
+    },
     handler: async (request, h) => {
       const id = request.params.id;
       const ObjectID = request.mongo.ObjectID;
