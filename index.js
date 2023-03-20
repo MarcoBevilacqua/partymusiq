@@ -7,6 +7,9 @@ const init = async () => {
   const server = Hapi.server({
     port: 3000,
     host: "localhost",
+    routes: {
+      cors: true,
+    },
   });
 
   await server.register(require("@hapi/inert"));
@@ -27,23 +30,27 @@ const init = async () => {
 
   server.auth.strategy("session", "cookie", {
     cookie: {
-      name: "sid-example",
+      name: "partymusiqv1",
 
       // Don't forget to change it to your own secret password!
       password: "password-should-be-32-characters",
 
       // For working via HTTP in localhost
       isSecure: false,
+      ttl: 10 * 60 * 60 * 1000,
     },
 
     validate: async (request, session) => {
       const validAccount = request.auth.credentials === session.id;
 
       if (!validAccount) {
+        console.log("Invalid User");
         return { isValid: false };
       }
 
-      return { isValid: true };
+      console.log("USER IS AUTHENTICATED");
+      //return h.authenticated({ name: "Marco" });
+      return { isValid: true, credentials: request.auth.credentials };
     },
   });
 

@@ -91,23 +91,27 @@ export default {
     goToRegister() {
       this.$router.push("/register");
     },
-    login(form) {
+    async login(form) {
       console.log(form);
       let loginFormData = {
         username: form.target[1].value,
         password: form.target[2].value,
       };
 
-      login(loginFormData).then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          this.$parent.$emit("set-logged-user-info", res.data.credentials);
+      await this.axios
+        .post("/api/auth/login", loginFormData, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            this.$parent.$emit("user-logged-in", res.data.credentials);
 
-          this.$router.push("/party");
-        } else {
-          this.error = res.data;
-        }
-      });
+            //this.$router.push("/party");
+          } else {
+            this.error = res.data;
+          }
+        });
     },
   },
 };
