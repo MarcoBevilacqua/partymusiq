@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axiosConfig";
 
 export async function login(loginData) {
   const response = await axios.post("/api/auth/login", loginData);
