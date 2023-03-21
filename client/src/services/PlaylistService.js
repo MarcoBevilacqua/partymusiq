@@ -1,5 +1,4 @@
-import axios from "axios";
-axios.defaults.withCredentials = true;
+import axios from "../utils/axiosConfig";
 
 export async function searchMusicForPlaylist(search) {
   const response = await axios.get("/api/mu?search=" + search);

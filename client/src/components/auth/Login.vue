@@ -91,7 +91,7 @@ export default {
     goToRegister() {
       this.$router.push("/register");
     },
-    login(form) {
+    async login(form) {
       console.log(form);
       let loginFormData = {
         username: form.target[1].value,
@@ -101,7 +101,7 @@ export default {
       login(loginFormData).then((res) => {
         console.log(res);
         if (res.status === 200) {
-          this.$parent.$emit("set-logged-user-info", res.data.credentials);
+          this.$emit("user-logged-in", res.data.credentials);
 
           this.$router.push("/party");
         } else {
