@@ -1,7 +1,6 @@
 <template>
   <div>
     <h2>Hi, Welcome Back</h2>
-    <Login />
   </div>
 </template>
 

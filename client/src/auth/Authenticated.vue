@@ -32,10 +32,24 @@
           </router-link>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
+          <a
+            v-if="this.$props.user"
+            @click="this.goToUserProfile(this.$props?.user?.username)"
+            class="cursor-pointer text-sm font-semibold leading-6 text-gray-900"
+            >{{ this.$props?.user?.username }}
+          </a>
+          <a
+            v-if="this.$props.user"
+            @click="this.goToLogout"
+            class="text-sm cursor-pointer"
+            ><small>Logout</small></a
+          >
+          <a
+            v-else
+            href="#"
+            class="text-sm font-semibold leading-6 text-gray-900"
             >Log in <span aria-hidden="true">&rarr;</span></a
           >
-          <span>{{ this.$props.user.username }}</span>
         </div>
       </nav>
       <Dialog as="div" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
@@ -89,6 +103,8 @@
 
 <script>
 const mobileMenuOpen = ref(false);
+
+import { logout } from "../services/AuthService";
 import { ref } from "vue";
 import { Dialog, DialogPanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
@@ -96,6 +112,20 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 export default {
   props: {
     user: Object,
+  },
+  methods: {
+    goToUserProfile(userId) {
+      this.$router.push("/user/" + userId + "/profile");
+    },
+    goToLogout() {
+      logout().then((res) => {
+        if (!res) {
+          return false;
+        }
+        this.$emit("user-logged-out");
+        this.$router.push("/login");
+      });
+    },
   },
 };
 </script>

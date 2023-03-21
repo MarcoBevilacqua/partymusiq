@@ -78,9 +78,7 @@ module.exports = [
     method: "POST",
     path: "/auth/login",
     options: {
-      auth: {
-        mode: "try",
-      },
+      auth: { mode: "try" },
     },
     handler: async (request, h) => {
       const payload = request.payload;
@@ -89,33 +87,42 @@ module.exports = [
         password: payload.password,
       });
       if (user) {
-        request.cookieAuth.set(user);
-        return h.response({ isValid: true, credentials: { name: user.name, username: user.username } });
+        request.cookieAuth.set({ username: user.username });
+        return { isValid: true, credentials: { username: user.username } };
       }
     },
   },
   {
     method: "GET",
-    path: "/logout",
+    path: "/auth/check",
     options: {
-      handler: (request, h) => {
-        request.cookieAuth.clear();
-        return true;
-      },
+      auth: { mode: "try" },
+    },
+    handler: (request, h) => {
+      console.log(request.auth);
+      if (!request.auth.isAuthenticated) {
+        console.log("User is not authenticated");
+        return {};
+      }
+      return h.response(request.auth.credentials);
+    },
+  },
+  {
+    method: "GET",
+    path: "/auth/logout",
+    options: {
+      auth: { mode: "try" },
+    },
+    handler: (request, h) => {
+      request.cookieAuth.clear();
+      return true;
     },
   },
   {
     method: "GET",
     path: "/party",
     options: {
-      auth: {
-        mode: "try",
-      },
-      plugins: {
-        cookie: {
-          redirectTo: false,
-        },
-      },
+      auth: { mode: "required" },
     },
     handler: async (request, h) => {
       const offset = Number(request.query.offset) || 0;

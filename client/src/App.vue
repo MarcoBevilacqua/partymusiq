@@ -1,7 +1,12 @@
 <template>
   <base-layout>
-    <Guest @user-logged-in="this.setUserInfo"></Guest>
-    <Authenticated :user="this.auth.user">
+    <Login v-if="!this.auth.user" @user-logged-in="this.setUserInfo"></Login>
+    <Authenticated
+      v-else
+      @user-logged-refresh="this.setUserInfo"
+      @user-logged-out="this.resetUserInfo"
+      :user="this.auth.user"
+    >
       <router-view></router-view>
     </Authenticated>
   </base-layout>
@@ -24,24 +29,42 @@ header {
 <script>
 import Authenticated from "./auth/Authenticated.vue";
 import BaseLayout from "./base/BaseLayout.vue";
-import Guest from "./auth/Guest.vue";
+import Login from "./components/auth/Login.vue";
+
+import { heartbeat } from "./services/AuthService";
 export default {
   components: {
     Authenticated,
     BaseLayout,
-    Guest,
+    Login,
   },
   data() {
     return {
       auth: {
-        user: { username: null },
+        user: null,
       },
     };
   },
   methods: {
     setUserInfo(userInfo) {
-      this.auth.user.username = userInfo.username;
+      console.log(userInfo);
+      this.auth.user = { username: userInfo.username };
     },
+    resetUserInfo() {
+      this.auth.user = null;
+    },
+  },
+  mounted() {
+    if (!this.auth.user) {
+      heartbeat().then((res) => {
+        if (!res.username) {
+          //not logged in
+          this.$router.push("/login");
+        } else {
+          this.setUserInfo(res);
+        }
+      });
+    }
   },
 };
 </script>
