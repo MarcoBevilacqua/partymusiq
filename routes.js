@@ -251,17 +251,17 @@ module.exports = [
   },
   {
     method: "GET",
-    path: "/user",
+    path: "/user/{userId}/profile",
     handler: async (request, h) => {
       const offset = Number(request.query.offset) || 0;
-      const parties = await request.mongo.db
+      const userValidateSchema = await request.mongo.db
         .collection("users")
-        .find({})
+        .find({ username: { $ne: request.params.userId } })
         .sort({ metacritic: -1 })
         .skip(offset)
         .limit(20)
         .toArray();
-      return parties;
+      return userValidateSchema;
     },
   },
   {
