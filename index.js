@@ -43,7 +43,7 @@ const init = async () => {
 
     validate: async (request, session) => {
       const validAccount = await request.mongo.db.collection("users").findOne({
-        username: session.id,
+        username: session.username,
       });
 
       if (!validAccount) {
@@ -51,7 +51,6 @@ const init = async () => {
         return { isValid: false };
       }
 
-      console.log(session.id);
       console.log("USER IS AUTHENTICATED");
       return { isValid: true, credentials: request.auth.credentials };
     },
