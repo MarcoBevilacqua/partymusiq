@@ -3,7 +3,12 @@ import App from "./App.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 
 import Guest from "./auth/Guest.vue";
-import { AddParty, EditParty, ListParty } from "./components/party/index";
+import {
+  AddParty,
+  EditParty,
+  ListParty,
+  InviteToParty,
+} from "./components/party/index";
 
 import ListUser from "./components/user/pages/ListUserPage.vue";
 
@@ -17,6 +22,11 @@ const routes = [
   { path: "/register", component: Guest },
   { path: "/party/add", component: AddParty },
   { path: "/party/:id", component: EditParty, name: "edit-party" },
+  {
+    path: "/party/:id/invite",
+    component: InviteToParty,
+    name: "invite-to-party",
+  },
 
   { path: "/user/profile", component: ListUser },
 ];

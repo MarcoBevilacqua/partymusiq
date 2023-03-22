@@ -9,16 +9,31 @@
             Welcome to
             <span class="font-bold text-gray-400">{{ this.party.title }}</span>
           </h2>
-          <small>234 people having fun right now!</small>
+          <small v-if="!this.party.invitation"
+            >There is no one here
+            <router-link
+              class="text-indigo-600 font-bold"
+              :to="this.party._id + '/invite'"
+              >Add someone!</router-link
+            ></small
+          >
+          <small v-else
+            >{{ this.party.invitation.length }} people having fun right now!
+            <router-link
+              class="text-indigo-600 font-bold"
+              :to="this.party._id + '/invite'"
+              >Invite some more!</router-link
+            >
+          </small>
         </div>
       </div>
     </div>
-
     <playlist
       id="party"
       v-if="this.party.playlist"
       :songList="this.party.playlist"
     ></playlist>
+    <music-search @add-to-playlist="addToPlaylist"></music-search>
   </div>
   <div class="mt-4 text-center w-full">
     <router-link to="/">
@@ -33,9 +48,13 @@
 
 <script>
 import { getSingleParty } from "../../../services/PartyService";
+import { addSongToPlaylist } from "../../../services/PlaylistService";
 import BaseLayout from "../../../base/BaseLayout.vue";
 import Playlist from "../../playlist/Playlist.vue";
 import MusicSearch from "../../shared/MusicSearch.vue";
+
+//constants
+import PartyMode from "../../../constants/Party";
 export default {
   components: {
     BaseLayout,
@@ -51,6 +70,13 @@ export default {
     getSingleParty(id) {
       getSingleParty(id).then((response) => {
         this.party = response;
+      });
+    },
+    addToPlaylist(songList) {
+      addSongToPlaylist(this.party._id, songList).then((res) => {
+        console.log(res);
+        this.mode = PartyMode.MODE_LIST;
+        this.list = res.value.playlist;
       });
     },
   },

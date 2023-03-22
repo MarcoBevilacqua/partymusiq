@@ -14,3 +14,10 @@ export async function getSingleParty(id) {
   const response = await axios.get("/api/party/" + id);
   return response.data;
 }
+
+export async function inviteToParty(userId, partyId) {
+  const response = await axios.post("/api/party/" + partyId + "/invite", {
+    user: userId,
+  });
+  return response.data;
+}

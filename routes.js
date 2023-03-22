@@ -165,7 +165,7 @@ module.exports = [
       const ObjectID = request.mongo.ObjectID;
       const party = await request.mongo.db
         .collection("parties")
-        .findOne({ _id: new ObjectID(id) }, { projection: { title: 1, description: 1, playlist: 1 } });
+        .findOne({ _id: new ObjectID(id) }, { projection: { title: 1, description: 1, playlist: 1, invitation: 1 } });
       return party;
     },
   },
@@ -253,6 +253,39 @@ module.exports = [
           { $pull: { playlist: { $eq: song } } },
           { returnDocument: "after" }
         );
+
+      return party;
+    },
+  },
+  {
+    /**
+     * remove song from party playlist
+     */
+    method: "POST",
+    path: "/party/{partyId}/invite",
+    options: {
+      validate: {
+        params: Joi.object({
+          partyId: Joi.objectId(),
+        }),
+      },
+    },
+    handler: async (request, h) => {
+      console.log("Inviting a new guest for party " + request.params.partyId);
+      const ObjectID = request.mongo.ObjectID;
+      const user = await request.mongo.db.collection("users").findOne(
+        { _id: new ObjectID(request.payload.user) },
+        {
+          projection: { _id: 1, username: 1, name: 1 },
+        }
+      );
+
+      if (!user) {
+        return h.response("Invalid User from user id " + request.payload.user).code(400);
+      }
+      const party = await request.mongo.db
+        .collection("parties")
+        .findOneAndUpdate({ _id: new ObjectID(request.params.partyId) }, { $push: { invitation: user } });
 
       return party;
     },
