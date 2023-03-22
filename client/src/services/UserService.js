@@ -1,7 +1,7 @@
 import axios from "../utils/axiosConfig";
 
-export async function getAllUsers(userId) {
-  const response = await axios.get("/api/user/" + userId + "/profile");
+export async function getAllUsers() {
+  const response = await axios.get("/api/user/profile");
   return response.data;
 }
 

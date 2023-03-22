@@ -2,9 +2,10 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 
-import Login from "./components/auth/Login.vue";
-import Register from "./components/auth/Register.vue";
+import Guest from "./auth/Guest.vue";
 import { AddParty, EditParty, ListParty } from "./components/party/index";
+
+import ListUser from "./components/user/pages/ListUserPage.vue";
 
 import "./assets/main.css";
 
@@ -12,10 +13,12 @@ import "./assets/main.css";
 // Each route should map to a component.
 const routes = [
   { path: "/party", component: ListParty },
-  { path: "/login", component: Login, meta: { requiresAuth: false } },
-  { path: "/register", component: Register },
+  { path: "/login", component: Guest },
+  { path: "/register", component: Guest },
   { path: "/party/add", component: AddParty },
   { path: "/party/:id", component: EditParty, name: "edit-party" },
+
+  { path: "/user/profile", component: ListUser },
 ];
 
 // 3. Create the router instance and pass the `routes` option

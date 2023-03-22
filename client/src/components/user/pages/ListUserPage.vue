@@ -10,7 +10,7 @@
           </h2>
         </div>
       </div>
-      <div class="flex gap-2 users-container">
+      <div class="flex flex-wrap gap-2">
         <user-list-item :users="this.users"></user-list-item>
       </div>
     </div>
@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     getAllUsers() {
-      getAllUsers(this.$route.params.id).then((res) => {
+      getAllUsers().then((res) => {
         console.log(res);
         this.users = res;
       });
