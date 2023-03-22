@@ -49,19 +49,23 @@
           <div class="mb-6">
             <label
               class="block text-gray-700 text-sm font-bold mb-2"
-              for="password"
+              for="mood"
             >
-              Hosted by:
+              Mood:
             </label>
             <select
               class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              name="host"
-              id="host"
-              v-model="host"
+              name="mood"
+              id="mood"
+              v-model="mood"
             >
-              <option value="-1">No host selected</option>
-              <option v-for="user in users" :key="user._id" :value="user._id">
-                {{ user.name }}
+              <option value="-1">No mood selected</option>
+              <option
+                v-for="mood in availableMoods"
+                :key="mood.id"
+                :value="mood.id"
+              >
+                {{ mood.title }}
               </option>
             </select>
           </div>
@@ -88,7 +92,13 @@ export default {
       users: [],
       title: "",
       starting: null,
-      host: null,
+      mood: null,
+      //TODO: make these programmatic
+      availableMoods: [
+        { id: 1, title: "happy" },
+        { id: 2, title: "savage" },
+        { id: 3, title: "calm" },
+      ],
     };
   },
   methods: {
@@ -101,7 +111,7 @@ export default {
       let partyData = {
         title: this.title,
         starting: this.starting,
-        host: this.host,
+        mood: this.mood,
       };
 
       createParty(partyData).then((response) => {

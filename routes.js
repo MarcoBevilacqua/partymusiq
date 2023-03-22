@@ -143,17 +143,8 @@ module.exports = [
     handler: async (request, h) => {
       const offset = Number(request.query.offset) || 0;
       const parties = await request.mongo.db
-        .collection("parties")
-        .aggregate([
-          {
-            $lookup: {
-              from: "users",
-              let: { hostId: "$host" },
-              pipeline: [{ $project: { name: "$name" } }],
-              as: "host",
-            },
-          },
-        ])
+        .collection("parties", { starting: { $gt: new Date() } })
+        .find()
         .sort({ starting: 1 })
         .skip(offset)
         .limit(20)
@@ -192,7 +183,21 @@ module.exports = [
     },
     handler: async (request, h) => {
       const payload = request.payload;
-      const party = await request.mongo.db.collection("parties").insertOne(payload);
+      const host = await request.mongo.db.collection("users").findOne(
+        {
+          username: request.auth.credentials.username,
+        },
+        { projection: { name: 1, _id: 1 } }
+      );
+      if (!host) {
+        return h.response("No Host available").code(401);
+      }
+      const party = await request.mongo.db.collection("parties").insertOne({
+        title: payload.title,
+        starting: payload.starting,
+        mood: payload.mood,
+        host: host,
+      });
       return party;
     },
   },
