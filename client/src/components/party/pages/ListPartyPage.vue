@@ -12,14 +12,18 @@
       </div>
 
       <div
+        v-if="parties.length"
         class="mx-auto w-1/2 items-center text-center relative rounded-md py-4 gap-x-6 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
       >
         <party-list-item :parties="parties"></party-list-item>
       </div>
+      <div v-else class="mx-auto w-1/2 items-center text-center">
+        <span>Whoop, seems like you have no party</span>
+      </div>
       <div class="mt-10 flex items-center justify-center gap-x-6">
         <a
           @click="goToCreateParty"
-          class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          class="cursor-pointer rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >Create Party</a
         >
       </div>
@@ -58,7 +62,7 @@ export default {
             return {
               id: e._id,
               starting: partyDate.toLocaleTimeString("it-IT", this.dateOptions),
-              host: e.host[0].name,
+              host: e.host.name,
               title: e.title,
             };
           });

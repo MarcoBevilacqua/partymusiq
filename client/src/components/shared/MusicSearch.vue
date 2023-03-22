@@ -4,9 +4,8 @@
       @submit.prevent="addSongToPlaylist"
       class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
     >
-      <span class="text-sm font-lighter">No Playlist available</span>
       <label for="song" class="block text-gray-700 text-sm font-light mb-2"
-        >Search Artist or title</label
+        >Search Artist or title to add music</label
       >
       <input
         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -38,6 +37,14 @@
         value="Add song"
       />
     </form>
+    <div class="mt-2">
+      <h4>To add:</h4>
+      <ul>
+        <li v-for="song in this.songList">
+          <span>{{ song }}</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
