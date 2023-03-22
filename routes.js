@@ -59,10 +59,14 @@ module.exports = [
       return "everything is fine";
     },
   },
+  /**
+   * register new user
+   */
   {
     method: "POST",
     path: "/auth/register",
     options: {
+      auth: false,
       validate: {
         payload: userValidateSchema.userCreate,
         failAction: handleError,
@@ -70,7 +74,19 @@ module.exports = [
     },
     handler: async (request, h) => {
       const payload = request.payload;
-      const user = await request.mongo.db.collection("users").insertOne(payload);
+      const inserted = await request.mongo.db.collection("users").insertOne(payload);
+      if (!inserted) {
+        return h.response().code(500);
+      }
+      console.log(inserted);
+      const user = await request.mongo.db.collection("users").findOne(
+        {
+          _id: inserted.insertedId,
+        },
+        { projection: { username: 1 } }
+      );
+
+      console.log(user);
       return user;
     },
   },
@@ -102,7 +118,7 @@ module.exports = [
       console.log(request.auth);
       if (!request.auth.isAuthenticated) {
         console.log("User is not authenticated");
-        return {};
+        return h.response("Unauthorized").code(401);
       }
       return h.response(request.auth.credentials);
     },
@@ -122,7 +138,7 @@ module.exports = [
     method: "GET",
     path: "/party",
     options: {
-      auth: { mode: "required" },
+      auth: { mode: "try" },
     },
     handler: async (request, h) => {
       const offset = Number(request.query.offset) || 0;
@@ -258,82 +274,23 @@ module.exports = [
   },
   {
     method: "GET",
-    path: "/user/{userId}/profile",
+    path: "/user/profile",
+    options: {
+      auth: { mode: "try" },
+    },
     handler: async (request, h) => {
+      if (!request.auth.isAuthenticated) {
+        return h.response("Not Authenticated").code(401);
+      }
       const offset = Number(request.query.offset) || 0;
-      const userValidateSchema = await request.mongo.db
+      const users = await request.mongo.db
         .collection("users")
-        .find({ username: { $ne: request.params.userId } })
+        .find({ username: { $ne: request.auth.credentials.username } })
         .sort({ metacritic: -1 })
         .skip(offset)
         .limit(20)
         .toArray();
-      return userValidateSchema;
-    },
-  },
-  {
-    /**
-     * register new user
-     */
-    method: "POST",
-    path: "/user",
-    options: {
-      validate: {
-        payload: userValidateSchema.userCreate,
-      },
-    },
-    handler: async (request, h) => {
-      const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
-      return party;
-    },
-  },
-  {
-    /**
-     * party start reproducing
-     */
-    method: "POST",
-    path: "/party/{partyId}/start",
-    handler: async (request, h) => {
-      const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
-      return party;
-    },
-  },
-  {
-    /**
-     * party pause reproducing
-     */
-    method: "POST",
-    path: "/party/{partyId}/pause",
-    handler: async (request, h) => {
-      const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
-      return party;
-    },
-  },
-  {
-    /**
-     * party stop reproducing
-     */
-    method: "POST",
-    path: "/party/{partyId}/stop",
-    handler: async (request, h) => {
-      const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
-      return party;
-    },
-  },
-  {
-    /**
-     * party skip next song
-     */
-    method: "POST",
-    path: "/party/{partyId}/skip",
-    handler: async (request, h) => {
-      const payload = request.payload;
-      const party = await request.mongo.db.collection("users").insertOne(payload);
-      return party;
+      return users;
     },
   },
 ];

@@ -117,6 +117,7 @@ export default {
 
       register(registrationFormData).then((res) => {
         console.log(res);
+        this.$emit("user-registered", res);
       });
     },
   },

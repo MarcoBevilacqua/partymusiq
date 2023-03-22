@@ -32,24 +32,28 @@
           </router-link>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a
-            v-if="this.$props.user"
-            @click="this.goToUserProfile(this.$props?.user?.username)"
-            class="cursor-pointer text-sm font-semibold leading-6 text-gray-900"
-            >{{ this.$props?.user?.username }}
-          </a>
-          <a
-            v-if="this.$props.user"
-            @click="this.goToLogout"
-            class="text-sm cursor-pointer"
-            ><small>Logout</small></a
-          >
-          <a
-            v-else
-            href="#"
-            class="text-sm font-semibold leading-6 text-gray-900"
-            >Log in <span aria-hidden="true">&rarr;</span></a
-          >
+          <div v-if="this.$props.user">
+            <div>
+              <a
+                @click="this.goToUserProfile"
+                class="cursor-pointer text-sm font-semibold leading-6 text-gray-900"
+                >{{ this.$props?.user?.username }}
+              </a>
+            </div>
+            <div>
+              <a
+                v-if="this.$props.user"
+                @click="this.goToLogout"
+                class="text-sm cursor-pointer"
+                ><small>Logout</small></a
+              >
+            </div>
+          </div>
+          <div v-else>
+            <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
+              >Log in <span aria-hidden="true">&rarr;</span></a
+            >
+          </div>
         </div>
       </nav>
       <Dialog as="div" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
@@ -114,8 +118,8 @@ export default {
     user: Object,
   },
   methods: {
-    goToUserProfile(userId) {
-      this.$router.push("/user/" + userId + "/profile");
+    goToUserProfile() {
+      this.$router.push("/user/profile");
     },
     goToLogout() {
       logout().then((res) => {

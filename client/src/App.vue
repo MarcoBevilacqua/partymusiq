@@ -1,14 +1,20 @@
 <template>
   <base-layout>
-    <Login v-if="!this.auth.user" @user-logged-in="this.setUserInfo"></Login>
-    <Authenticated
+    <guest v-if="!this.auth.user">
+      <login
+        v-if="this.$route.path === '/login'"
+        @user-logged-in="this.setUserInfo"
+      ></login>
+      <register v-else @user-registered="this.setUserInfo"></register
+    ></guest>
+    <authenticated
       v-else
       @user-logged-refresh="this.setUserInfo"
       @user-logged-out="this.resetUserInfo"
       :user="this.auth.user"
     >
       <router-view></router-view>
-    </Authenticated>
+    </authenticated>
   </base-layout>
 </template>
 
@@ -29,14 +35,18 @@ header {
 <script>
 import Authenticated from "./auth/Authenticated.vue";
 import BaseLayout from "./base/BaseLayout.vue";
+import Guest from "./auth/Guest.vue";
 import Login from "./components/auth/Login.vue";
+import Register from "./components/auth/Register.vue";
 
 import { heartbeat } from "./services/AuthService";
 export default {
   components: {
     Authenticated,
     BaseLayout,
+    Guest,
     Login,
+    Register,
   },
   data() {
     return {
@@ -49,6 +59,7 @@ export default {
     setUserInfo(userInfo) {
       console.log(userInfo);
       this.auth.user = { username: userInfo.username };
+      this.$router.push("/party");
     },
     resetUserInfo() {
       this.auth.user = null;

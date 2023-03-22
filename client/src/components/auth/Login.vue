@@ -99,11 +99,9 @@ export default {
       };
 
       login(loginFormData).then((res) => {
-        console.log(res);
         if (res.status === 200) {
+          console.log("User is logged, emitting...");
           this.$emit("user-logged-in", res.data.credentials);
-
-          this.$router.push("/party");
         } else {
           this.error = res.data;
         }
