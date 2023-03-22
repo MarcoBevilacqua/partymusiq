@@ -11,6 +11,7 @@ import {
 } from "./components/party/index";
 
 import ListUser from "./components/user/pages/ListUserPage.vue";
+import MusicSearch from "./components/shared/MusicSearch.vue";
 
 import "./assets/main.css";
 
@@ -26,6 +27,11 @@ const routes = [
     path: "/party/:id/invite",
     component: InviteToParty,
     name: "invite-to-party",
+  },
+  {
+    path: "/party/:id/music",
+    component: MusicSearch,
+    name: "add-music-to-party",
   },
 
   { path: "/user/profile", component: ListUser },
