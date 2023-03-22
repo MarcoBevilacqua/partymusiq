@@ -3,14 +3,9 @@
     <div class="px-6 pt-6 lg:px-8">
       <nav class="flex items-center justify-between" aria-label="Global">
         <div class="flex lg:flex-1">
-          <a href="#" class="-m-1.5 p-1.5">
-            <span class="sr-only">Your Company</span>
-            <img
-              class="h-8"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt=""
-            />
-          </a>
+          <small class="font-bold tracking-tight text-gray-900 sm:text-2xl">
+            <router-link to="/"> PartyMusiq </router-link>
+          </small>
         </div>
         <div class="flex lg:hidden">
           <button
@@ -112,6 +107,8 @@ import { logout } from "../services/AuthService";
 import { ref } from "vue";
 import { Dialog, DialogPanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+
+const navigation = [{ name: "Party" }];
 
 export default {
   props: {
