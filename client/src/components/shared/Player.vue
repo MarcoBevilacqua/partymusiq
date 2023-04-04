@@ -13,9 +13,11 @@
   </div>
   <div id="queue" class="mt-4">
     <div id="song-container">
-      <ul class="py-4 px-2 border-t-2 border-t-gray-500">
-        <li
-          v-if="this.queue"
+      <div
+        v-if="this.queue"
+        class="flex justify-center py-4 px-2 border-t-2 border-t-gray-500"
+      >
+        <div
           v-for="(queueItem, queueIndex) in this.queue"
           :key="queueIndex"
           class="flex justify-between align-baseline rounded-sm text-sm mb-2"
@@ -41,8 +43,8 @@
               />
             </svg>
           </a>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
     <add-new-song
       @click="this.$emit('switch-mode-to-add', 'add')"
