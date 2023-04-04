@@ -18,6 +18,7 @@ import "./assets/main.css";
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [
+  { path: "/", component: Guest },
   { path: "/party", component: ListParty },
   { path: "/login", component: Guest },
   { path: "/register", component: Guest },

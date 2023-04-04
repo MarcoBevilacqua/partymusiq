@@ -54,7 +54,7 @@
     </div>
   </div>
   <div class="mt-4 text-center w-full">
-    <router-link to="/party ">
+    <router-link to="/party">
       <button
         class="bg-gray-300 text-gray-800 hover:bg-gray-400 px-4 py-2 rounded-md"
       >
