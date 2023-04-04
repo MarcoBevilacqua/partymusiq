@@ -203,6 +203,26 @@ module.exports = [
   },
   {
     /**
+     * remove party
+     */
+    method: "DELETE",
+    path: "/party/{id}",
+    options: {
+      validate: {
+        params: Joi.object({
+          id: Joi.objectId(),
+        }),
+      },
+    },
+    handler: async (request, h) => {
+      const id = request.params.id;
+      const ObjectID = request.mongo.ObjectID;
+      const status = await request.mongo.db.collection("parties").deleteOne({ _id: ObjectID(id) });
+      return status;
+    },
+  },
+  {
+    /**
      * add song to party playlist
      */
     method: "PUT",
@@ -223,6 +243,34 @@ module.exports = [
         .findOneAndUpdate(
           { _id: new ObjectID(request.params.partyId) },
           { $push: { playlist: payload.playlist[0] } },
+          { returnDocument: "after" }
+        );
+      return updatedPartyPlaylist;
+    },
+  },
+  {
+    /**
+     * add song to party playlist
+     */
+    method: "POST",
+    path: "/song/vote",
+    options: {
+      // validate: {
+      //   params: Joi.object({
+      //     partyId: Joi.objectId(),
+      //     songId: Joi.number(),
+      //   }),
+      // },
+    },
+    handler: async (request, h) => {
+      const payload = request.payload;
+      console.log("Voting song with id " + payload.songId + " in party " + payload.partyId);
+      const ObjectID = request.mongo.ObjectID;
+      const updatedPartyPlaylist = await request.mongo.db
+        .collection("parties")
+        .findOneAndUpdate(
+          { _id: new ObjectID(payload.partyId), "playlist.$": payload.songId },
+          { $inc: { "playlist.$.votes": 1 } },
           { returnDocument: "after" }
         );
       return updatedPartyPlaylist;
@@ -259,7 +307,7 @@ module.exports = [
   },
   {
     /**
-     * remove song from party playlist
+     * invite user to party
      */
     method: "POST",
     path: "/party/{partyId}/invite",
@@ -290,26 +338,7 @@ module.exports = [
       return party;
     },
   },
-  {
-    /**
-     * remove party
-     */
-    method: "DELETE",
-    path: "/party/{id}",
-    options: {
-      validate: {
-        params: Joi.object({
-          id: Joi.objectId(),
-        }),
-      },
-    },
-    handler: async (request, h) => {
-      const id = request.params.id;
-      const ObjectID = request.mongo.ObjectID;
-      const status = await request.mongo.db.collection("parties").deleteOne({ _id: ObjectID(id) });
-      return status;
-    },
-  },
+
   {
     method: "GET",
     path: "/user/profile",

@@ -72,13 +72,20 @@
       <div v-else class="col px-8 mb-4">
         <span class="leading-tight">No song selected</span>
       </div>
+      <div>
+        <a @click="backToParty">Back to party</a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { searchMusicForPlaylist } from "../../services/PlaylistService";
+import {
+  searchMusicForPlaylist,
+  addSongToPlaylist,
+} from "../../services/PlaylistService";
 import { getSingleParty } from "../../services/PartyService";
+import Party from "../../constants/Party";
 export default {
   data() {
     return {
@@ -90,15 +97,22 @@ export default {
     };
   },
   methods: {
+    backToParty() {
+      this.$router.push("/party/" + this.$route.params.id);
+    },
     selectSong(song) {
       this.canChooseSong = false;
       this.canAddSong = true;
       this.$refs.song.value = song;
     },
-    addSongToPlaylist(song) {
-      console.log("Adding " + song);
+    addSongToPlaylist() {
       this.songList.push(this.$refs.song.value);
-      this.$emit("add-to-playlist", this.songList);
+      console.log("ADDING TO PLAYLIST");
+      addSongToPlaylist(this.party._id, this.songList).then((res) => {
+        console.log(res);
+        this.$parent.mode = Party.PartyMode.MODE_LIST;
+        this.$parent.list = res.value.playlist;
+      });
       this.$refs.song.value = "";
       this.canAddSong = false;
     },

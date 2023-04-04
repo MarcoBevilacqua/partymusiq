@@ -13,8 +13,9 @@ export async function addSongToPlaylist(partyId, songList) {
 }
 
 export async function removeSongFromPlaylist(partyId, song) {
+  console.log("removing " + song);
   const response = await axios.put("/api/party/" + partyId + "/playlist", {
     song: song,
   });
-  return response.data;
+  return response;
 }

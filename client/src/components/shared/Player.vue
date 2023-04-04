@@ -7,7 +7,11 @@
 
   <div class="my-2 border-t-2 border-t-gray-500"></div>
   <div id="queue">
-    <queue :queue="this.songList" :playing="this.playing"></queue>
+    <queue
+      @remove-from-playlist="this.removeSongFromPlaylist"
+      :queue="this.songList"
+      :playing="this.playing"
+    ></queue>
 
     <div id="controls" class="mb-4">
       <router-link :to="'/party/' + this.$parent.party._id + '/music'">
@@ -27,11 +31,9 @@ import Queue from "./Queue.vue";
 
 export default {
   components: { PlayerControls, Queue },
-  props: {
-    songList: Array,
-  },
   data() {
     return {
+      songList: this.$parent.party.playlist,
       playing: 0,
     };
   },
@@ -44,7 +46,8 @@ export default {
       return this.songList[this.playing];
     },
     removeSong(songId) {
-      this.$emit("remove-from-playlist", songId);
+      console.log("removing song " + songId + " from playlist");
+      this.songList.filter((song) => song === songId);
     },
   },
 };

@@ -39,16 +39,14 @@
       </h4>
       <player
         v-if="this.party.playlist"
-        :songList="this.party.playlist"
         @switch-mode-to-add="switchMode"
-        @remove-from-playlist="this.removeSongFromPlaylist"
       ></player>
       <!-- END PARTY PLAYER -->
 
       <!-- START MUSIC SEARCH  -->
       <music-search
         v-if="this.mode === 'add'"
-        @add-to-playlist="addToPlaylist"
+        @add-to-playlist="this.addSong"
       ></music-search>
       <!-- START MUSIC SEARCH  -->
     </div>
@@ -66,10 +64,6 @@
 
 <script>
 import { getSingleParty } from "../../../services/PartyService";
-import {
-  addSongToPlaylist,
-  removeSongFromPlaylist,
-} from "../../../services/PlaylistService";
 
 import BaseLayout from "../../../base/BaseLayout.vue";
 import Player from "../../shared/Player.vue";
@@ -94,22 +88,6 @@ export default {
     getSingleParty(id) {
       getSingleParty(id).then((response) => {
         this.party = response;
-      });
-    },
-    addToPlaylist(songList) {
-      addSongToPlaylist(this.party._id, songList).then((res) => {
-        console.log(res);
-        this.mode = PartyMode.MODE_LIST;
-        this.list = res.value.playlist;
-      });
-    },
-    removeSongFromPlaylist(songId) {
-      removeSongFromPlaylist(
-        this.$parent.party._id,
-        this.songList[songId]
-      ).then((res) => {
-        console.log(res);
-        this.list = res.value.playlist;
       });
     },
     switchMode(mode) {
