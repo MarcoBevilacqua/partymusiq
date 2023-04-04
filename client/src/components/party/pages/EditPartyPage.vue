@@ -28,15 +28,33 @@
         </div>
       </div>
     </div>
-    <playlist
-      id="party"
-      v-if="this.party.playlist"
-      :songList="this.party.playlist"
-    ></playlist>
-    <music-search @add-to-playlist="addToPlaylist"></music-search>
+    <!-- START PARTY PLAYER -->
+    <div
+      class="flex flex-col justify-center text-center w-full bg-gray-100 rounded-md"
+    >
+      <h4
+        class="text-2xl mt-6 font-extralight tracking-tight text-gray-900 sm:text-2xl"
+      >
+        Now Playing
+      </h4>
+      <player
+        v-if="this.party.playlist"
+        :songList="this.party.playlist"
+        @switch-mode-to-add="switchMode"
+        @remove-from-playlist="this.removeSongFromPlaylist"
+      ></player>
+      <!-- END PARTY PLAYER -->
+
+      <!-- START MUSIC SEARCH  -->
+      <music-search
+        v-if="this.mode === 'add'"
+        @add-to-playlist="addToPlaylist"
+      ></music-search>
+      <!-- START MUSIC SEARCH  -->
+    </div>
   </div>
   <div class="mt-4 text-center w-full">
-    <router-link to="/">
+    <router-link to="/party">
       <button
         class="bg-gray-300 text-gray-800 hover:bg-gray-400 px-4 py-2 rounded-md"
       >
@@ -48,22 +66,28 @@
 
 <script>
 import { getSingleParty } from "../../../services/PartyService";
-import { addSongToPlaylist } from "../../../services/PlaylistService";
+import {
+  addSongToPlaylist,
+  removeSongFromPlaylist,
+} from "../../../services/PlaylistService";
+
 import BaseLayout from "../../../base/BaseLayout.vue";
-import Playlist from "../../playlist/Playlist.vue";
+import Player from "../../shared/Player.vue";
 import MusicSearch from "../../shared/MusicSearch.vue";
 
 //constants
-import PartyMode from "../../../constants/Party";
+import Party from "../../../constants/Party";
 export default {
   components: {
     BaseLayout,
-    Playlist,
+    Player,
     MusicSearch,
   },
   data() {
     return {
       party: {},
+      canAddSong: false,
+      mode: Party.PartyMode.MODE_LIST,
     };
   },
   methods: {
@@ -78,6 +102,19 @@ export default {
         this.mode = PartyMode.MODE_LIST;
         this.list = res.value.playlist;
       });
+    },
+    removeSongFromPlaylist(songId) {
+      removeSongFromPlaylist(
+        this.$parent.party._id,
+        this.songList[songId]
+      ).then((res) => {
+        console.log(res);
+        this.list = res.value.playlist;
+      });
+    },
+    switchMode(mode) {
+      console.log("switching to " + mode);
+      this.mode = mode;
     },
   },
   mounted() {

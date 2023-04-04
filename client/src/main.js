@@ -11,12 +11,14 @@ import {
 } from "./components/party/index";
 
 import ListUser from "./components/user/pages/ListUserPage.vue";
+import MusicSearch from "./components/shared/MusicSearch.vue";
 
 import "./assets/main.css";
 
 // 2. Define some routes
 // Each route should map to a component.
 const routes = [
+  { path: "/", component: Guest },
   { path: "/party", component: ListParty },
   { path: "/login", component: Guest },
   { path: "/register", component: Guest },
@@ -26,6 +28,11 @@ const routes = [
     path: "/party/:id/invite",
     component: InviteToParty,
     name: "invite-to-party",
+  },
+  {
+    path: "/party/:id/music",
+    component: MusicSearch,
+    name: "add-music-to-party",
   },
 
   { path: "/user/profile", component: ListUser },
