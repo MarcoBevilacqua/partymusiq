@@ -45,7 +45,7 @@
     </div>
     <div>
       <a
-        @click="this.removeSong(item.title, item._id)"
+        @click="this.removeSong(item._id)"
         class="cursor-pointer text-red-400 hover:text-gray-400"
       >
         <svg
@@ -99,12 +99,12 @@ export default {
       this.canVote = true;
       this.voted = false;
     },
-    removeSong(songTitle, songIndex) {
-      removeSongFromPlaylist(this.$route.params.id, songTitle)
+    removeSong(songId) {
+      removeSongFromPlaylist(this.$route.params.id, songId)
         .then((res) => {
           if (res.status === 200) {
             //remove song from list
-            this.$emit("song-removed", songIndex);
+            this.$emit("song-removed", res.data.value.playlist);
           }
         })
         .catch((err) => {

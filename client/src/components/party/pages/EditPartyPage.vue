@@ -32,11 +32,6 @@
     <div
       class="flex flex-col justify-center text-center w-full bg-gray-100 rounded-md"
     >
-      <h4
-        class="text-2xl mt-6 font-extralight tracking-tight text-gray-900 sm:text-2xl"
-      >
-        Now Playing
-      </h4>
       <player
         v-if="this.party.playlist"
         @switch-mode-to-add="switchMode"

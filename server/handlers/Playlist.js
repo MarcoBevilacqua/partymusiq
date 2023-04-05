@@ -20,14 +20,14 @@ module.exports = {
   },
   remove: async (request) => {
     console.log("Updating playlist for party " + request.params.partyId);
-    const song = request.params.songId;
-    console.log("Removing song " + song);
+    const songId = request.params.songId;
+    console.log("Removing song " + songId);
     const ObjectID = request.mongo.ObjectID;
     const party = await request.mongo.db
       .collection("parties")
       .findOneAndUpdate(
         { _id: new ObjectID(request.params.partyId) },
-        { $pull: { playlist: { $eq: song } } },
+        { $pull: { playlist: { _id: new ObjectID(songId) } } },
         { returnDocument: "after" }
       );
 

@@ -24,7 +24,6 @@ export default {
   },
   methods: {
     popQueueItem(queueItem) {
-      console.log("removing " + queueItem + " from queue");
       this.$emit("remove-from-playlist", queueItem);
     },
   },

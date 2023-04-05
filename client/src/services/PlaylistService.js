@@ -12,13 +12,10 @@ export async function addSongToPlaylist(partyId, songList) {
   return response.data;
 }
 
-export async function removeSongFromPlaylist(partyId, song) {
-  console.log("removing " + song);
+export async function removeSongFromPlaylist(partyId, songId) {
+  console.log("removing " + songId);
   const response = await axios.delete(
-    "/api/playlist/" + partyId + "/r/" + song,
-    {
-      song: song,
-    }
+    "/api/playlist/" + partyId + "/r/" + songId
   );
   return response;
 }

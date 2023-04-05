@@ -2,7 +2,7 @@
 
 module.exports = {
   check: async (request, h) => {
-    console.log(request.auth);
+    //console.log(request.auth);
     if (!request.auth.isAuthenticated) {
       console.log("User is not authenticated");
       return h.response("Unauthorized").code(401);

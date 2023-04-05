@@ -32,6 +32,7 @@ module.exports = {
         validate: {
           params: Joi.object({
             partyId: Joi.objectId(),
+            songId: Joi.objectId(),
           }),
         },
       },
