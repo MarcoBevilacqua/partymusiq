@@ -1,7 +1,7 @@
 const { payload } = require("@hapi/hapi/lib/validation");
 const Joi = require("@hapi/joi");
 const fs = require("fs");
-const fsMusicFolder = "./client/public/music";
+const fsMusicFolder = "../client/public/music";
 Joi.objectId = require("joi-objectid")(Joi);
 
 module.exports = [
@@ -10,17 +10,11 @@ module.exports = [
     path: "/mu",
     handler: (request, h) => {
       let allFiles = fs.readdirSync(fsMusicFolder);
+      let normalizedSearch = request.query.search.toLowerCase();
       let filterByQuery = allFiles.filter((file) => {
-        return file.toLowerCase().startsWith(request.query.search);
+        return file.toLowerCase().startsWith(normalizedSearch);
       });
       return filterByQuery;
-    },
-  },
-  {
-    method: "GET",
-    path: "/",
-    handler: (request, h) => {
-      return "everything is fine";
     },
   },
 ];

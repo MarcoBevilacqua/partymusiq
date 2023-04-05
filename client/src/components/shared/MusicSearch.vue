@@ -72,8 +72,14 @@
       <div v-else class="col px-8 mb-4">
         <span class="leading-tight">No song selected</span>
       </div>
-      <div>
-        <a @click="backToParty">Back to party</a>
+      <div class="px-2 text-center">
+        <small>
+          <router-link
+            class="text-indigo-600 font-bold"
+            :to="'/party/' + this.$route.params.id"
+            >back to party</router-link
+          >
+        </small>
       </div>
     </div>
   </div>
@@ -97,9 +103,6 @@ export default {
     };
   },
   methods: {
-    backToParty() {
-      this.$router.push("/party/" + this.$route.params.id);
-    },
     selectSong(song) {
       this.canChooseSong = false;
       this.canAddSong = true;

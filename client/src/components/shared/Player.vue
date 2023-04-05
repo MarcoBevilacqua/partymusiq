@@ -1,5 +1,5 @@
 <template>
-  <small>{{ this.songList[this.playing] }}</small>
+  <small>{{ this.songList[this.playing].title }}</small>
   <player-controls
     :track="this.playing"
     @next-track="this.getNextTrack"

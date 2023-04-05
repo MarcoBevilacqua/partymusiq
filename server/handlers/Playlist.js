@@ -1,22 +1,26 @@
 "use strict";
-
+const ObjectId = require("mongodb").ObjectId;
 module.exports = {
   add: async (request, h) => {
     console.log("Updating party with id " + request.params.partyId);
-    const payload = request.payload;
+    const playlistFromRequest = request.payload.playlist.map((item) => {
+      return { _id: ObjectId(), title: item, user: request.auth.credentials.username, votes: 0 };
+    });
     const ObjectID = request.mongo.ObjectID;
-    const updatedPartyPlaylist = await request.mongo.db
-      .collection("parties")
-      .findOneAndUpdate(
-        { _id: new ObjectID(request.params.partyId) },
-        { $push: { playlist: payload.playlist[0] } },
-        { returnDocument: "after" }
-      );
+    const updatedPartyPlaylist = await request.mongo.db.collection("parties").findOneAndUpdate(
+      { _id: new ObjectID(request.params.partyId) },
+      {
+        $addToSet: {
+          playlist: { $each: playlistFromRequest },
+        },
+      },
+      { returnDocument: "after" }
+    );
     return updatedPartyPlaylist;
   },
-  remove: async (request, h) => {
+  remove: async (request) => {
     console.log("Updating playlist for party " + request.params.partyId);
-    const song = request.payload.song;
+    const song = request.params.songId;
     console.log("Removing song " + song);
     const ObjectID = request.mongo.ObjectID;
     const party = await request.mongo.db
@@ -29,28 +33,28 @@ module.exports = {
 
     return party;
   },
-  upvote: async (request, h) => {
+  upvote: async (request) => {
     const payload = request.payload;
     console.log("Voting song with id " + payload.songId + " in party " + payload.partyId);
     const ObjectID = request.mongo.ObjectID;
     const updatedPartyPlaylist = await request.mongo.db
       .collection("parties")
       .findOneAndUpdate(
-        { _id: new ObjectID(payload.partyId), "playlist.$": payload.songId },
+        { _id: new ObjectID(payload.partyId), "playlist._id": { $eq: new ObjectID(payload.songId) } },
         { $inc: { "playlist.$.votes": 1 } },
         { returnDocument: "after" }
       );
     return updatedPartyPlaylist;
   },
-  downvote: async (request, h) => {
+  downvote: async (request) => {
     const payload = request.payload;
-    console.log("Voting song with id " + payload.songId + " in party " + payload.partyId);
+    console.log("downvoting song with id " + payload.songId + " in party " + payload.partyId);
     const ObjectID = request.mongo.ObjectID;
     const updatedPartyPlaylist = await request.mongo.db
       .collection("parties")
       .findOneAndUpdate(
-        { _id: new ObjectID(payload.partyId), "playlist.$": payload.songId },
-        { $inc: { "playlist.$.votes": 1 } },
+        { _id: new ObjectID(payload.partyId), "playlist._id": { $eq: new ObjectID(payload.songId) } },
+        { $inc: { "playlist.$.votes": -1 } },
         { returnDocument: "after" }
       );
     return updatedPartyPlaylist;

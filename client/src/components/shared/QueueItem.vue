@@ -1,15 +1,15 @@
 <template>
   <div>
-    <span class="text-xs py-2 pl-2">{{ songTitle }}</span>
+    <span class="text-xs py-2 pl-2">{{ item.title }}</span>
   </div>
   <div class="flex justify-end gap-2 basis-2/4 align-baseline">
     <div>
       <a
-        @click="this.upvoteSong(songIndex)"
+        v-if="!this.voted"
+        @click="this.upvoteSong(item._id)"
         class="cursor-pointer text-gray-400 hover:text-gray-400"
       >
         <svg
-          v-if="this.canVote"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
@@ -21,8 +21,13 @@
             clip-rule="evenodd"
           />
         </svg>
+      </a>
+      <a
+        v-else
+        @click="this.downvoteSong(item._id)"
+        class="cursor-pointer text-gray-400 hover:text-gray-400"
+      >
         <svg
-          v-else
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -40,7 +45,7 @@
     </div>
     <div>
       <a
-        @click="this.removeSong(songTitle, songIndex)"
+        @click="this.removeSong(item.title, item._id)"
         class="cursor-pointer text-red-400 hover:text-gray-400"
       >
         <svg
@@ -64,16 +69,16 @@
 
 <script>
 import { removeSongFromPlaylist } from "../../services/PlaylistService";
-import { upvoteSong } from "../../services/SongService";
+import { upvoteSong, downvoteSong } from "../../services/SongService";
 
 export default {
   props: {
-    songTitle: String,
-    songIndex: Number,
+    item: Object,
   },
   data() {
     return {
       canVote: true,
+      voted: false,
     };
   },
   methods: {
@@ -82,7 +87,17 @@ export default {
         console.log(res);
       });
       console.log("voting song nr " + songIdx);
-      this.canVote = !this.canVote;
+      this.canVote = false;
+      this.voted = true;
+    },
+
+    downvoteSong(songIdx) {
+      downvoteSong(this.$route.params.id, songIdx).then((res) => {
+        console.log(res);
+      });
+      console.log("downvoting voting song " + songIdx);
+      this.canVote = true;
+      this.voted = false;
     },
     removeSong(songTitle, songIndex) {
       removeSongFromPlaylist(this.$route.params.id, songTitle)

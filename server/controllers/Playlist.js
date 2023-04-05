@@ -27,7 +27,7 @@ module.exports = {
        * remove song from party playlist
        */
       method: "DELETE",
-      path: "/playlist/{partyId}",
+      path: "/playlist/{partyId}/r/{songId}",
       options: {
         validate: {
           params: Joi.object({
@@ -43,7 +43,7 @@ module.exports = {
      */
     server.route({
       method: "PATCH",
-      path: "/playlist/{partyId}",
+      path: "/song/vote",
       handler: playlistHandlers.upvote,
     });
 
@@ -52,8 +52,8 @@ module.exports = {
      */
     server.route({
       method: "PUT",
-      path: "/playlist/{partyId}",
-      handler: playlistHandlers.upvote,
+      path: "/song/vote",
+      handler: playlistHandlers.downvote,
     });
   },
 };

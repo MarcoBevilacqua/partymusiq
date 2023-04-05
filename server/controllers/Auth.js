@@ -8,7 +8,7 @@ module.exports = {
     //register new user
     server.route({
       method: "POST",
-      path: "/auth/register",
+      path: "/register",
       options: {
         auth: false,
         validate: {

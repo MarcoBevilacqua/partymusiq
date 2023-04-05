@@ -67,6 +67,9 @@ const init = async () => {
       options: {
         errorHelper: errorHelper,
       },
+      routes: {
+        prefix: "/auth",
+      },
     },
     {
       plugin: require("./controllers/Party"),

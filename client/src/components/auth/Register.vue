@@ -7,6 +7,15 @@
         <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
           Sign Up
         </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+          Or
+          {{ " " }}
+          <a
+            @click="goToLogin"
+            class="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+            >login</a
+          >
+        </p>
       </div>
       <form @submit.prevent="this.register">
         <div class="grid grid-cols-2 gap-y-6 gap-x-8 sm:grid-cols-2">
@@ -119,6 +128,9 @@ export default {
         console.log(res);
         this.$emit("user-registered", res);
       });
+    },
+    goToLogin() {
+      this.$router.push("/login");
     },
   },
 };
