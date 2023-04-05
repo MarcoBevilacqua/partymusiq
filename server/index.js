@@ -1,7 +1,7 @@
 "use strict";
 
 const Hapi = require("@hapi/hapi");
-const routes = require("./routes");
+const routes = require("../server/routes");
 
 const init = async () => {
   const server = Hapi.server({
@@ -58,7 +58,17 @@ const init = async () => {
 
   server.auth.default("session");
 
-  server.route(routes);
+  /** register routes */
+  await server.register([
+    {
+      plugin: require("./controllers/Auth"),
+      options: {},
+    },
+    {
+      plugin: require("./controllers/Party"),
+      options: {},
+    },
+  ]);
 
   await server.start();
   console.log("Server running on %s", server.info.uri);
