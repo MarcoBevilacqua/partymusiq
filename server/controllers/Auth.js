@@ -1,29 +1,25 @@
 "use strict";
-
+const userValidateSchema = require("../models/User");
 const authHandlers = require("../handlers/Auth");
 
-exports.auth = {
+module.exports = {
+  name: "auth controller",
   register: async (server, options) => {
-    server.route(
-      /**
-       * register new user
-       */
-      {
-        method: "POST",
-        path: "/auth/register",
-        options: {
-          auth: false,
-          validate: {
-            payload: userValidateSchema.userCreate,
-            failAction: handleError,
-          },
+    //register new user
+    server.route({
+      method: "POST",
+      path: "/auth/register",
+      options: {
+        auth: false,
+        validate: {
+          payload: userValidateSchema.userCreate,
+          failAction: options.errorHelper.handle,
         },
-        handler: authHandlers.register,
-      }
-    );
-    /**
-     * User Login
-     */
+      },
+      handler: authHandlers.create,
+    });
+
+    //user login
     server.route({
       method: "POST",
       path: "/login",
@@ -33,10 +29,8 @@ exports.auth = {
       handler: authHandlers.login,
     });
 
-    /**
-     * User logout
-     */
-    server.register({
+    //user logout
+    server.route({
       method: "GET",
       path: "/logout",
       options: {
@@ -45,10 +39,8 @@ exports.auth = {
       handler: authHandlers.logout,
     });
 
-    /**
-     * Create new user
-     */
-    server.register({
+    //create user
+    server.route({
       method: "GET",
       path: "/check",
       options: {

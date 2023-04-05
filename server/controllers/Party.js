@@ -5,7 +5,8 @@ Joi.objectId = require("joi-objectid")(Joi);
 const partyValidateSchema = require("../models/Party");
 
 //register /party routes
-exports.partyController = {
+module.exports = {
+  name: "party controller",
   register: async (server, options) => {
     /**
      * Get all parties
@@ -42,7 +43,7 @@ exports.partyController = {
       options: {
         validate: {
           payload: partyValidateSchema.create,
-          failAction: handleError,
+          failAction: options.errorHelper.handle,
         },
       },
       handler: partyHandlers.createParty,

@@ -1,7 +1,10 @@
 "use strict";
+
+const Joi = require("@hapi/joi");
 const userHandlers = require("../handlers/User");
 
-user.exports = {
+module.exports = {
+  name: "User controller",
   register: async (server, options) => {
     /**
      * invite user to party
@@ -30,6 +33,5 @@ user.exports = {
       },
       handler: userHandlers.profile,
     });
-    server.route({});
   },
 };

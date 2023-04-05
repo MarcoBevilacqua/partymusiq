@@ -1,8 +1,10 @@
 "use strict";
 
+const Joi = require("@hapi/joi");
 const playlistHandlers = require("../handlers/Playlist");
 
-exports.playlist = {
+module.exports = {
+  name: "Playlist controller",
   register: async (server, options) => {
     server.route({
       /**

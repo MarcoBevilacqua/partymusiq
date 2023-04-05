@@ -24,7 +24,7 @@ module.exports = {
     request.cookieAuth.clear();
     return true;
   },
-  register: async (request, h) => {
+  create: async (request, h) => {
     const payload = request.payload;
     const inserted = await request.mongo.db.collection("users").insertOne(payload);
     if (!inserted) {
