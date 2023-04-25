@@ -1,22 +1,20 @@
 <template>
   <div class="relative px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl py-32 sm:py-42 lg:py-48">
-      <div class="hidden sm:mb-8 sm:flex sm:justify-center">
-        <div class="relative py-1 px-3 text-sm leading-6 text-gray-600">
+    <div class="mx-auto py-12 sm:py-12 lg:py-12">
+      <div class="hidden sm:mb-8 sm:flex">
+        <div class="relative py-1 text-sm leading-6 text-gray-600">
           <h2
-            class="text-4xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+            class="text-2xl font-light tracking-tight text-gray-900 sm:text-4xl"
           >
-            These are your parties:
+            Your parties:
           </h2>
         </div>
       </div>
-
-      <div
+      <party-list-item
         v-if="parties.length"
-        class="mx-auto w-1/2 items-center text-center relative rounded-md py-4 gap-x-6 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-      >
-        <party-list-item :parties="parties"></party-list-item>
-      </div>
+        :parties="parties"
+      ></party-list-item>
+
       <div v-else class="mx-auto w-1/2 items-center text-center">
         <span>Whoop, seems like you have no party</span>
       </div>
@@ -27,6 +25,18 @@
           >Create Party</a
         >
       </div>
+    </div>
+    <div v-if="invitations.length" class="mx-auto py-12 sm:py-12 lg:py-12">
+      <div class="hidden sm:mb-8 sm:flex">
+        <div class="relative py-1 text-sm leading-6 text-gray-600">
+          <h2
+            class="text-2xl font-light tracking-tight text-gray-900 sm:text-4xl"
+          >
+            Invitations:
+          </h2>
+        </div>
+      </div>
+      <div class="border-purple-400"></div>
     </div>
     <div
       class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
@@ -44,8 +54,9 @@ export default {
   data() {
     return {
       parties: [],
+      invitations: [],
       dateOptions: {
-        weekday: "long",
+        weekday: "short",
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -61,7 +72,8 @@ export default {
             let partyDate = new Date(e.starting);
             return {
               id: e._id,
-              starting: partyDate.toLocaleTimeString("it-IT", this.dateOptions),
+              startingTime: partyDate.toLocaleTimeString("it-IT"),
+              startingDate: partyDate.toLocaleString("it-IT", this.dateOptions),
               host: e.host.name,
               title: e.title,
             };

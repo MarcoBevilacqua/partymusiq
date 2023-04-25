@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="px-6 pt-6 lg:px-8">
+    <div class="p-6 lg:px-8">
       <nav class="flex items-center justify-between" aria-label="Global">
         <div class="flex lg:flex-1">
           <small class="font-bold tracking-tight text-gray-900 sm:text-2xl">

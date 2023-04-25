@@ -1,6 +1,6 @@
 <template>
   <div class="relative px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl py-32 sm:py-42 lg:py-48">
+    <div class="mx-auto py-32 sm:py-42 lg:py-48">
       <div class="hidden sm:mb-8 sm:flex sm:justify-center">
         <div class="relative py-1 px-3 text-sm leading-6 text-gray-600">
           <h2
@@ -10,7 +10,7 @@
           </h2>
         </div>
       </div>
-      <div class="flex flex-wrap gap-2">
+      <div class="flex flex-wrap mx-auto">
         <user-list-item :users="this.users"></user-list-item>
       </div>
     </div>
