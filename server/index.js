@@ -85,6 +85,10 @@ const init = async () => {
       plugin: require("./controllers/User"),
       options: {},
     },
+    {
+      plugin: require("./controllers/Invitation"),
+      options: {},
+    },
   ]);
 
   server.route(routes);
