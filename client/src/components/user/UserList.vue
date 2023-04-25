@@ -3,24 +3,26 @@
     v-if="this.users.length"
     v-for="user in users"
     :key="user._id"
-    class="w-1/5 text-center relative rounded-md py-4 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+    class="w-1/4 p-2"
   >
-    <h4>{{ user.name }}</h4>
-    <h4>{{ user.username }}</h4>
-    <div>
-      <a
-        @click="this.askFriend(user._id)"
-        class="cursor-pointer text-indigo-300 font-ligther"
-        >Friend</a
-      >
-    </div>
-    <div>
-      <a
-        v-if="this.$route.params.id"
-        @click="this.inviteFriendToParty(user._id, this.$route.params.id)"
-        class="cursor-pointer text-indigo-300 font-ligther"
-        >Invite To party</a
-      >
+    <div class="rounded-md p-2 text-gray-600 border border-gray-200">
+      <div class="lh-1">
+        <h1 class="text-xl font-light">{{ user.name }}</h1>
+        <small>{{ user.username }}</small>
+      </div>
+      <div class="inline-flex gap-2">
+        <a
+          @click="this.askFriend(user._id)"
+          class="cursor-pointer text-indigo-300 font-ligther"
+          >Friend</a
+        >
+        <a
+          v-if="this.$route.params.id"
+          @click="this.inviteFriendToParty(user._id, this.$route.params.id)"
+          class="cursor-pointer text-indigo-300 font-ligther"
+          >Invite To party</a
+        >
+      </div>
     </div>
   </div>
 </template>

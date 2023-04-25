@@ -11,7 +11,7 @@ module.exports = {
      */
     server.route({
       method: "POST",
-      path: "/user/{partyId}/invite",
+      path: "/party/{partyId}/invite",
       options: {
         validate: {
           params: Joi.object({
