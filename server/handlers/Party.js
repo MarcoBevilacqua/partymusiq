@@ -3,9 +3,13 @@
 module.exports = {
   getParties: async (request, h) => {
     const offset = Number(request.query.offset) || 0;
+    console.log(request.auth.credentials.username);
     const parties = await request.mongo.db
-      .collection("parties", { starting: { $gt: new Date() } })
-      .find()
+      .collection("parties")
+      .find({
+        starting: { $gt: new Date() },
+        "host.name": request.auth.credentials.username,
+      })
       .sort({ starting: 1 })
       .skip(offset)
       .limit(20)
@@ -28,7 +32,7 @@ module.exports = {
       {
         username: request.auth.credentials.username,
       },
-      { projection: { name: 1, _id: 1 } }
+      { projection: { username: 1, _id: 1 } }
     );
     if (!host) {
       return h.response("No Host available").code(401);
