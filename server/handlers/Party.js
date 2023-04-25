@@ -3,7 +3,6 @@
 module.exports = {
   getParties: async (request, h) => {
     const offset = Number(request.query.offset) || 0;
-    console.log(request.auth.credentials.username);
     const parties = await request.mongo.db
       .collection("parties")
       .find({
