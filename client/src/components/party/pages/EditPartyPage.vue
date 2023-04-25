@@ -29,14 +29,24 @@
       </div>
     </div>
     <!-- START PARTY PLAYER -->
-    <div
-      class="flex flex-col justify-center text-center w-full bg-gray-100 rounded-md"
-    >
+    <div class="grid grid-cols-3 text-center w-full">
       <player
+        class="col-span-2"
         v-if="this.party.playlist"
         @switch-mode-to-add="switchMode"
       ></player>
       <!-- END PARTY PLAYER -->
+
+      <!-- START INVITE LIST  -->
+      <div v-if="this.party.invitation" class="col-span-1">
+        <h2 class="font-semibold">Invitation</h2>
+        <ul>
+          <li v-for="invitation in this.party.invitation">
+            {{ invitation.name }}
+          </li>
+        </ul>
+      </div>
+      <!-- END INVITE LIST  -->
 
       <!-- START MUSIC SEARCH  -->
       <music-search

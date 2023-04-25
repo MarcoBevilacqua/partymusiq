@@ -1,5 +1,5 @@
 <template>
-  <div v-if="this.songList.length">
+  <div v-if="this.songList.length" class="bg-gray-100">
     <h4
       class="text-2xl mt-6 font-extralight tracking-tight text-gray-900 sm:text-2xl"
     >

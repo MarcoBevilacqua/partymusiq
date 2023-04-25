@@ -8,7 +8,7 @@ module.exports = {
       .collection("parties")
       .find({
         starting: { $gt: new Date() },
-        "host.name": request.auth.credentials.username,
+        "host.username": request.auth.credentials.username,
       })
       .sort({ starting: 1 })
       .skip(offset)
