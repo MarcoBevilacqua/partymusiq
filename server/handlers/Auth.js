@@ -39,6 +39,14 @@ module.exports = {
   create: async (request, h) => {
     let { name, username, password } = request.payload;
 
+    const emailExists = await request.mongo.db.collection("users").findOne({
+      username: username,
+    });
+
+    if (emailExists) {
+      return h.response("Email already used").code(400);
+    }
+
     let encPassword = await bcrypt.hash(password, saltRounds);
 
     const inserted = await request.mongo.db
