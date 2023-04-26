@@ -18,15 +18,6 @@
       </h4>
     </div>
   </div>
-  <div
-    class="w-1/3 rounded-md gap-x-6 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-  >
-    <a
-      @click="goToCreateParty"
-      class="cursor-pointer rounded-md text-indigo-600 text-sm font-semibold"
-      >Create Party</a
-    >
-  </div>
 </template>
 
 <script>
@@ -38,10 +29,6 @@ export default {
     goToEditParty(partyId) {
       console.log("edit party " + partyId);
       this.$router.push("/party/" + partyId);
-    },
-    goToCreateParty() {
-      console.log("create party");
-      this.$router.push("/party/add");
     },
   },
 };

@@ -2,7 +2,16 @@
   <page-layout title="Your Parties">
     <party-list-item v-if="parties.length" :parties="parties"></party-list-item>
     <div v-else class="mx-auto w-1/2 items-center text-center">
-      <span>Whoop, seems like you have no party</span>
+      <div>
+        <span>Whoop, seems like you have no party</span>
+      </div>
+      <div>
+        <a
+          @click="goToCreateParty"
+          class="cursor-pointer rounded-md text-indigo-600 text-sm font-semibold"
+          >Create Party</a
+        >
+      </div>
     </div>
     <invitation-list></invitation-list>
   </page-layout>
@@ -35,7 +44,6 @@ export default {
     getAllParties() {
       getAllParties()
         .then((response) => {
-          console.log(response);
           this.parties = response.map((e) => {
             let partyDate = new Date(e.starting);
             return {
@@ -50,6 +58,10 @@ export default {
         .catch((err) => {
           console.warn("AN ERROR OCCURRED: " + err);
         });
+    },
+    goToCreateParty() {
+      console.log("create party");
+      this.$router.push("/party/add");
     },
   },
   mounted() {
