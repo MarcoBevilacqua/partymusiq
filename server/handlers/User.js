@@ -16,7 +16,10 @@ module.exports = {
     }
     const party = await request.mongo.db
       .collection("parties")
-      .findOneAndUpdate({ _id: new ObjectID(request.params.partyId) }, { $push: { invitation: user } });
+      .findOneAndUpdate(
+        { _id: new ObjectID(request.params.partyId) },
+        { $push: { invitation: { user: user, status: "pending" } } }
+      );
 
     return party;
   },

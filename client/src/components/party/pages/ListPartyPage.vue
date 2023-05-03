@@ -13,6 +13,8 @@
         >
       </div>
     </div>
+  </page-layout>
+  <page-layout title="Invitations">
     <invitation-list></invitation-list>
   </page-layout>
 </template>

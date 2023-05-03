@@ -1,20 +1,5 @@
 <template>
-  <div v-if="this.invitations.length" class="mx-auto py-12 sm:py-12 lg:py-12">
-    <div class="hidden sm:mb-8 sm:flex">
-      <div class="relative py-1 text-sm leading-6 text-gray-600">
-        <h2
-          class="text-2xl font-light tracking-tight text-gray-900 sm:text-4xl"
-        >
-          Invitations:
-        </h2>
-      </div>
-    </div>
-    <invitation-list-item
-      v-if="invitations.length"
-      :invitations="invitations"
-    ></invitation-list-item>
-    <div class="border-purple-400"></div>
-  </div>
+  <invitation-list-item :invitations="invitations"></invitation-list-item>
 </template>
 
 <script>
@@ -46,7 +31,7 @@ export default {
               id: e._id,
               startingTime: partyDate.toLocaleTimeString("it-IT"),
               startingDate: partyDate.toLocaleString("it-IT", this.dateOptions),
-              host: e.host.name,
+              host: e.host.username,
               title: e.title,
             };
           });
