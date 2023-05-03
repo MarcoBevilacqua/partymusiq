@@ -1,5 +1,7 @@
 "use strict";
 
+const dateOptions = { weekday: "short", year: "numeric", month: "long", day: "numeric" };
+
 module.exports = {
   getInvitations: async (request, h) => {
     const offset = Number(request.query.offset) || 0;
