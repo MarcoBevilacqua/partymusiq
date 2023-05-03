@@ -4,7 +4,7 @@
       <nav class="flex items-center justify-between" aria-label="Global">
         <div class="flex lg:flex-1">
           <small class="font-bold tracking-tight text-gray-900 sm:text-2xl">
-            <router-link to="/"> PartyMusiq </router-link>
+            <router-link to="/party"> PartyMusiq </router-link>
           </small>
         </div>
         <div class="flex lg:hidden">
@@ -18,7 +18,7 @@
           </button>
         </div>
         <div class="hidden lg:flex lg:gap-x-12">
-          <router-link to="/">
+          <router-link to="/party">
             <h3
               class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
             >
