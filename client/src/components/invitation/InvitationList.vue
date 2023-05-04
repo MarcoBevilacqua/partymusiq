@@ -4,7 +4,7 @@
 
 <script>
 import { getInvitations } from "../../services/InvitationService";
-import InvitationListItem from "../invitations/InvitationListItem.vue";
+import InvitationListItem from "../invitation/InvitationListItem.vue";
 export default {
   components: {
     InvitationListItem,
@@ -24,15 +24,15 @@ export default {
     getInvitations() {
       getInvitations()
         .then((response) => {
-          console.log(response);
           this.invitations = response.map((e) => {
-            let partyDate = new Date(e.starting);
+            let partyDate = new Date(e.party.starting);
             return {
               id: e._id,
               startingTime: partyDate.toLocaleTimeString("it-IT"),
               startingDate: partyDate.toLocaleString("it-IT", this.dateOptions),
-              host: e.host.username,
-              title: e.title,
+              host: e.party.host.username,
+              title: e.party.title,
+              status: e.status,
             };
           });
         })

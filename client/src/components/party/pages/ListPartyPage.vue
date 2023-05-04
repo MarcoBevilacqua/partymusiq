@@ -23,7 +23,7 @@
 import PageLayout from "../../../base/PageLayout.vue";
 import { getAllParties } from "../../../services/PartyService";
 import PartyListItem from "../PartyList.vue";
-import InvitationList from "../../invitations/InvitationList.vue";
+import InvitationList from "../../invitation/InvitationList.vue";
 export default {
   components: {
     PageLayout,

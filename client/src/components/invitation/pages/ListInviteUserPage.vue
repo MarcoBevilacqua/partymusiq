@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="this.users.length"
-    v-for="user in users"
+    v-for="user in this.users"
     :key="user._id"
     class="w-1/4 p-2"
   >
@@ -12,9 +12,10 @@
       </div>
       <div class="inline-flex gap-2">
         <a
-          @click="this.askFriend(user._id)"
+          v-if="this.$route.params.id"
+          @click="this.inviteFriendToParty(user._id, this.$route.params.id)"
           class="cursor-pointer text-indigo-300 font-ligther"
-          >Friend</a
+          >Invite To party</a
         >
       </div>
     </div>
@@ -22,6 +23,8 @@
 </template>
 
 <script>
+import { createInvitation } from "../../../services/InvitationService";
+
 export default {
   props: {
     users: Array,
@@ -29,6 +32,11 @@ export default {
   methods: {
     askFriend(userId) {
       console.log(userId);
+    },
+    inviteFriendToParty(userId, partyId) {
+      createInvitation(userId, partyId).then((res) => {
+        console.log(res);
+      });
     },
   },
 };

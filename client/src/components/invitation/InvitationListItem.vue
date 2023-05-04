@@ -16,35 +16,27 @@
       </h4>
       <span class="text-xs">Host: {{ invitation.host }}</span>
     </div>
-    <div class="inline-flex w-full justify-around text-center border-t">
-      <div
-        class="w-1/2 cursor-pointer hover:bg-slate-200 border-r border-indigo-200"
-      >
-        <a @click="acceptParty(invitation.id)">Accept</a>
-      </div>
-      <div class="w-1/2 cursor-pointer hover:bg-slate-200 border-gray-200">
-        <a @click="declineParty(invitation.id)">Decline</a>
-      </div>
-    </div>
+    <invitation-btn
+      @accept-invitation="answer(invitation, true)"
+      @decline-invitation="answer(invitation, false)"
+      :status="invitation.status"
+    ></invitation-btn>
   </div>
 </template>
 
 <script>
 import { answerInvitation } from "../../services/InvitationService";
+import InvitationBtn from "../shared/buttons/InvitationBtn.vue";
 export default {
+  components: {
+    InvitationBtn,
+  },
   props: {
     invitations: Array,
   },
   methods: {
-    acceptParty(invitation) {
-      answerInvitation(invitation, "accepted").then((res) => {
-        console.log(res);
-      });
-    },
-    declineParty(invitation) {
-      answerInvitation(invitation, "declined").then((res) => {
-        console.log(res);
-      });
+    answer(invitation, accepted) {
+      answerInvitation(invitation, accepted).then((res) => console.log(res));
     },
   },
 };

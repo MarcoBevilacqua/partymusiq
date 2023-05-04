@@ -1,13 +1,15 @@
 <template>
-  <list-user-page></list-user-page>
+  <page-layout title="Invite to party">
+    <list-invite-party-page :users="this.users"></list-invite-party-page>
+  </page-layout>
 </template>
 
 <script>
-import ListUserPage from "../../user/pages/ListUserPage.vue";
-import { getAllUsers } from "../../../services/UserService";
+import ListInvitePartyPage from "../../invitation/pages/ListInviteUserPage.vue";
+import { getUsersToInvite } from "../../../services/UserService";
 export default {
   components: {
-    ListUserPage,
+    ListInvitePartyPage,
   },
   data() {
     return {
@@ -16,8 +18,7 @@ export default {
   },
   methods: {
     getAllUsers() {
-      getAllUsers().then((res) => {
-        console.log(res);
+      getUsersToInvite(this.$route.params.id).then((res) => {
         this.users = res;
       });
     },
