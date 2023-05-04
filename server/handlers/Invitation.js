@@ -1,34 +1,68 @@
 "use strict";
-
 const dateOptions = { weekday: "short", year: "numeric", month: "long", day: "numeric" };
 
 module.exports = {
   getInvitations: async (request, h) => {
     const offset = Number(request.query.offset) || 0;
     console.log(request.auth.credentials.username);
-    const invitiations = await request.mongo.db
-      .collection("parties")
+
+    return await request.mongo.db
+      .collection("invitations")
       .find({
-        starting: { $gt: new Date() },
-        "invitation.user.username": request.auth.credentials.username,
+        "party.starting": { $gt: new Date() },
+        "user.username": request.auth.credentials.username,
       })
-      .sort({ starting: 1 })
       .skip(offset)
       .limit(20)
       .toArray();
-    return invitiations;
+  },
+
+  createInvitation: async (request, h) => {
+    console.log("Inviting a new guest for party " + request.params.partyId);
+    const ObjectID = request.mongo.ObjectID;
+    const user = await request.mongo.db.collection("users").findOne(
+      { _id: new ObjectID(request.payload.user) },
+      {
+        projection: { _id: 1, username: 1 },
+      }
+    );
+
+    if (!user) {
+      return h.response("Invalid User from user id " + request.payload.user).code(400);
+    }
+
+    const party = await request.mongo.db.collection("parties").findOne(
+      { _id: new ObjectID(request.params.partyId) },
+      {
+        projection: { _id: 1, starting: 1, host: 1, title: 1 },
+      }
+    );
+
+    if (!party) {
+      return h.response("Invalid Party from party id " + request.params.partyId).code(400);
+    }
+
+    return await request.mongo.db.collection("invitations").updateOne(
+      { user: user },
+      {
+        $set: {
+          status: request.payload.status,
+          party: party,
+        },
+      },
+      { upsert: true }
+    );
   },
 
   updateInvitation: async (request, h) => {
-    const partyId = request.params.partyId;
-    console.log("update invitation for party " + partyId);
+    const invitationId = request.params.invitationId;
+    console.log("update invitation with ID " + invitationId);
     const ObjectID = request.mongo.ObjectID;
-    const updatedInvitation = request.mongo.db.collection("parties").findOneAndUpdate(
+    const updatedInvitation = request.mongo.db.collection("invitations").findOneAndUpdate(
       {
-        _id: { $eq: new ObjectID(partyId) },
-        "invitation.user.username": { $eq: request.auth.credentials.username },
+        _id: { $eq: new ObjectID(invitationId) },
       },
-      { $set: { "invitation.$.status": request.payload.status } }
+      { $addToSet: { "invitation.$.status": request.payload.status } }
     );
     return updatedInvitation;
   },

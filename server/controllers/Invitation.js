@@ -18,11 +18,27 @@ module.exports = {
     });
 
     /**
+     * invite user to party
+     */
+    server.route({
+      method: "POST",
+      path: "/invitation/{partyId}",
+      options: {
+        validate: {
+          params: Joi.object({
+            partyId: Joi.objectId(),
+          }),
+        },
+      },
+      handler: invitationHandler.createInvitation,
+    });
+
+    /**
      * accept or decline invitation
      */
     server.route({
       method: "PATCH",
-      path: "/invitation/{partyId}",
+      path: "/invitation/{invitationId}",
       options: {
         auth: { mode: "try" },
       },

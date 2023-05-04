@@ -7,22 +7,6 @@ module.exports = {
   name: "User controller",
   register: async (server, options) => {
     /**
-     * invite user to party
-     */
-    server.route({
-      method: "POST",
-      path: "/party/{partyId}/invite",
-      options: {
-        validate: {
-          params: Joi.object({
-            partyId: Joi.objectId(),
-          }),
-        },
-      },
-      handler: userHandlers.inviteToParty,
-    });
-
-    /**
      * Get user profile
      */
     server.route({

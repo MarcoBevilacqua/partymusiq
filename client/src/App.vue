@@ -57,7 +57,6 @@ export default {
   },
   methods: {
     setUserInfo(userInfo) {
-      console.log(userInfo);
       this.auth.user = { username: userInfo.username };
       this.$router.push("/party");
     },
