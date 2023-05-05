@@ -4,7 +4,6 @@ const dateOptions = { weekday: "short", year: "numeric", month: "long", day: "nu
 module.exports = {
   getInvitations: async (request, h) => {
     const offset = Number(request.query.offset) || 0;
-    console.log(request.auth.credentials.username);
 
     return await request.mongo.db
       .collection("invitations")
@@ -13,6 +12,38 @@ module.exports = {
         "user.username": request.auth.credentials.username,
       })
       .skip(offset)
+      .limit(20)
+      .toArray();
+  },
+
+  getUsersToInvite: async (request, h) => {
+    const offset = Number(request.query.offset) || 0;
+    const ObjectID = request.mongo.ObjectID;
+    const partyId = request.params.partyId;
+
+    const invitations = await request.mongo.db
+      .collection("invitations")
+      .find(
+        {
+          "party._id": ObjectID(partyId),
+        },
+        { projection: { user: 1 } }
+      )
+      .limit(20)
+      .toArray();
+
+    const xx = invitations.map((i) => i.user._id);
+    console.log(xx);
+
+    return await request.mongo.db
+      .collection("friends")
+      .find(
+        {
+          user: request.auth.credentials.username,
+          $nin: { friends: invitations.map((i) => i.user._id) },
+        },
+        { projection: { friends: 1 } }
+      )
       .limit(20)
       .toArray();
   },

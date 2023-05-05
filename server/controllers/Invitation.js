@@ -18,6 +18,18 @@ module.exports = {
     });
 
     /**
+     * Get all user available for party
+     */
+    server.route({
+      method: "GET",
+      path: "/invitation/{partyId}",
+      options: {
+        auth: { mode: "try" },
+      },
+      handler: invitationHandler.getUsersToInvite,
+    });
+
+    /**
      * invite user to party
      */
     server.route({

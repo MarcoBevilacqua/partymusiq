@@ -15,30 +15,44 @@ module.exports = {
   },
 
   addFriend: async (request, h) => {
-    return await request.mongo.db
-      .collection("friends")
-      .insertOne(
-        { user: request.auth.credentials.username, friend: request.params.userId },
-        { returnDocument: "after" }
-      );
-  },
-  getNonFriends: async (request, h) => {
-    const friends = request.mongo.db
-      .collection("friends")
-      .find(
-        {
-          "user.username": request.auth.credentials.username,
+    const ObjectID = request.mongo.ObjectID;
+    return await request.mongo.db.collection("friends").findOneAndUpdate(
+      { user: request.auth.credentials.username },
+      {
+        $addToSet: {
+          friends: new ObjectID(request.payload.user),
         },
-        { projection: { _id: 1 } }
-      )
-      .toArray();
+      },
+      { returnDocument: "after", upsert: true }
+    );
+  },
+
+  getNonFriends: async (request, h) => {
+    const friends = await request.mongo.db.collection("friends").findOne(
+      {
+        user: request.auth.credentials.username,
+      },
+      { projection: { friends: 1 } }
+    );
+
+    if (!friends) {
+      return await request.mongo.db
+        .collection("users")
+        .find({
+          username: { $ne: request.auth.credentials.username },
+        })
+        .limit(25)
+        .toArray();
+    }
 
     return await request.mongo.db
       .collection("users")
       .find({
-        $nin: { "user._id": friends.map((f) => f._id) },
+        username: { $ne: request.auth.credentials.username },
+        _id: {
+          $nin: friends?.friends.map((f) => new request.mongo.ObjectID(f)),
+        },
       })
-      .skip(offset)
       .limit(20)
       .toArray();
   },

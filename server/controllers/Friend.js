@@ -11,11 +11,35 @@ module.exports = {
 
     server.route({
       method: "GET",
-      path: "/friend",
+      path: "/user/friends",
       options: {
         auth: { mode: "try" },
       },
       handler: friendHandler.getAllFriends,
+    });
+
+    /**
+     * get all non-friends
+     */
+    server.route({
+      method: "GET",
+      path: "/user/nonfriends",
+      options: {
+        auth: { mode: "try" },
+      },
+      handler: friendHandler.getNonFriends,
+    });
+
+    /**
+     * add friend
+     */
+    server.route({
+      method: "POST",
+      path: "/user/friends",
+      options: {
+        auth: { mode: "try" },
+      },
+      handler: friendHandler.addFriend,
     });
   },
 };

@@ -20,3 +20,8 @@ export async function answerInvitation(partyId, answer) {
   });
   return response.data;
 }
+
+export async function getAvailableForParty(partyId) {
+  const response = await axios.get("api/invitation/" + partyId);
+  return response.data;
+}
