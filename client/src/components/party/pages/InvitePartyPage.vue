@@ -5,10 +5,12 @@
 </template>
 
 <script>
+import PageLayout from "../../../base/PageLayout.vue";
 import ListInvitePartyPage from "../../invitation/pages/ListInviteUserPage.vue";
-import { getUsersToInvite } from "../../../services/UserService";
+import { getAvailableForParty } from "../../../services/InvitationService";
 export default {
   components: {
+    PageLayout,
     ListInvitePartyPage,
   },
   data() {
@@ -18,7 +20,7 @@ export default {
   },
   methods: {
     getAllUsers() {
-      getUsersToInvite(this.$route.params.id).then((res) => {
+      getAvailableForParty(this.$route.params.id).then((res) => {
         this.users = res;
       });
     },

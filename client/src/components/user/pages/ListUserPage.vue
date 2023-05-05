@@ -7,7 +7,7 @@
 <script>
 import PageLayout from "../../../base/PageLayout.vue";
 import UserListItem from "../UserList.vue";
-import { getAllUsers } from "../../../services/UserService";
+import { getNonFriends } from "../../../services/UserService";
 export default {
   components: {
     PageLayout,
@@ -19,15 +19,14 @@ export default {
     };
   },
   methods: {
-    getAllUsers() {
-      getAllUsers().then((res) => {
-        console.log(res);
+    getNonFriendUsers() {
+      getNonFriends().then((res) => {
         this.users = res;
       });
     },
   },
   mounted() {
-    this.getAllUsers();
+    this.getNonFriendUsers();
   },
 };
 </script>

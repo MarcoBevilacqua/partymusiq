@@ -10,26 +10,20 @@
         <h1 class="text-xl font-light">{{ user.name }}</h1>
         <small>{{ user.username }}</small>
       </div>
-      <div class="inline-flex gap-2">
-        <a
-          @click="this.askFriend(user._id)"
-          class="cursor-pointer text-indigo-300 font-ligther"
-          >Friend</a
-        >
-      </div>
+      <add-friend-btn :userId="user._id"></add-friend-btn>
     </div>
   </div>
 </template>
 
 <script>
+import AddFriendBtn from "./btn/AddFriend.vue";
+
 export default {
+  components: {
+    AddFriendBtn,
+  },
   props: {
     users: Array,
-  },
-  methods: {
-    askFriend(userId) {
-      console.log(userId);
-    },
   },
 };
 </script>
