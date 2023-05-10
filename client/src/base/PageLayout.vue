@@ -6,7 +6,7 @@
           <h2
             class="text-2xl font-light tracking-tight text-gray-900 sm:text-4xl"
           >
-            {{ title }}:
+            {{ title }}
           </h2>
         </div>
       </div>
