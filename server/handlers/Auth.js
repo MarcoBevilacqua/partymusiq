@@ -16,13 +16,7 @@ module.exports = {
       username: payload.username,
     });
 
-    console.log(user);
-
-    console.log("Comparing " + user.password + " with " + payload.password);
-
     let userIsValid = await bcrypt.compare(payload.password, user.password);
-
-    console.log("User is valid: " + userIsValid);
 
     if (!userIsValid) {
       return h.response("Invalid Password").code(403);

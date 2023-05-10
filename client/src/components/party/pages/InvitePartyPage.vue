@@ -21,7 +21,7 @@ export default {
   methods: {
     getAllUsers() {
       getAvailableForParty(this.$route.params.id).then((res) => {
-        this.users = res;
+        this.users = res.friends;
       });
     },
   },

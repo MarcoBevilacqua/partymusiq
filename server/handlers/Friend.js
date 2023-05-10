@@ -16,11 +16,19 @@ module.exports = {
 
   addFriend: async (request, h) => {
     const ObjectID = request.mongo.ObjectID;
+    const friend = await request.mongo.db
+      .collection("users")
+      .findOne({ _id: new ObjectID(request.payload.user) }, { projection: { _id: 1, username: 1 } });
+
+    if (!friend) {
+      return h.response("No user found").code(400);
+    }
+
     return await request.mongo.db.collection("friends").findOneAndUpdate(
       { user: request.auth.credentials.username },
       {
         $addToSet: {
-          friends: new ObjectID(request.payload.user),
+          friends: friend,
         },
       },
       { returnDocument: "after", upsert: true }
@@ -28,32 +36,35 @@ module.exports = {
   },
 
   getNonFriends: async (request, h) => {
-    const friends = await request.mongo.db.collection("friends").findOne(
+    const userFriends = await request.mongo.db.collection("friends").findOne(
       {
         user: request.auth.credentials.username,
       },
-      { projection: { friends: 1 } }
+      { projection: { "friends.username": 1 } }
     );
 
-    if (!friends) {
-      return await request.mongo.db
-        .collection("users")
-        .find({
+    console.log(userFriends);
+
+    let users = await request.mongo.db
+      .collection("users")
+      .find(
+        {
           username: { $ne: request.auth.credentials.username },
-        })
-        .limit(25)
-        .toArray();
+        },
+        { projection: { _id: 0, password: 0 } }
+      )
+      .limit(50)
+      .toArray();
+
+    console.log(users);
+
+    if (!userFriends.friends || !userFriends.friends.length) {
+      console.log("No friends retrieved, returning all users...");
+      return users;
     }
 
-    return await request.mongo.db
-      .collection("users")
-      .find({
-        username: { $ne: request.auth.credentials.username },
-        _id: {
-          $nin: friends?.friends.map((f) => new request.mongo.ObjectID(f)),
-        },
-      })
-      .limit(20)
-      .toArray();
+    return users.filter((u) => {
+      return !userFriends.friends.map((uf) => uf.username).includes(u.username);
+    });
   },
 };

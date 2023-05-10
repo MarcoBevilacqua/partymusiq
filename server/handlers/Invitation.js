@@ -17,7 +17,6 @@ module.exports = {
   },
 
   getUsersToInvite: async (request, h) => {
-    const offset = Number(request.query.offset) || 0;
     const ObjectID = request.mongo.ObjectID;
     const partyId = request.params.partyId;
 
@@ -27,25 +26,44 @@ module.exports = {
         {
           "party._id": ObjectID(partyId),
         },
-        { projection: { user: 1 } }
+        { projection: { "user._id": 1 } }
       )
       .limit(20)
       .toArray();
 
-    const xx = invitations.map((i) => i.user._id);
-    console.log(xx);
+    let alreadyInvited = invitations.length ? invitations.map((i) => i.user._id) : [];
 
-    return await request.mongo.db
-      .collection("friends")
-      .find(
-        {
-          user: request.auth.credentials.username,
-          $nin: { friends: invitations.map((i) => i.user._id) },
-        },
-        { projection: { friends: 1 } }
-      )
-      .limit(20)
-      .toArray();
+    const friendsToInvite = await request.mongo.db.collection("friends").findOne(
+      {
+        user: request.auth.credentials.username,
+      },
+      { projection: { friends: 1 } }
+    );
+
+    if (!friendsToInvite.friends || !friendsToInvite.friends.length) {
+      console.log("no friends in " + friendsToInvite.friends);
+      return [];
+    }
+
+    // try {
+    //   const toInvite = await request.mongo.db
+    //     .collection("friends")
+    //     .aggregate([
+    //       { $match: { user: request.auth.credentials.username } },
+    //       { $unwind: "$friends" },
+    //       { $addFields: { "friends.invited": 1 } },
+    //       { $project: { friends: 1 } },
+    //     ])
+    //     .toArray();
+
+    //   console.log(toInvite);
+    // } catch (err) {
+    //   console.warn(err);
+    // }
+
+    return friendsToInvite.friends.map((ftv) => {
+      return { ...ftv, invited: !alreadyInvited.includes(ftv) };
+    });
   },
 
   createInvitation: async (request, h) => {

@@ -53,7 +53,6 @@ const init = async () => {
         return { isValid: false };
       }
 
-      console.log("USER IS AUTHENTICATED");
       return { isValid: true, credentials: request.auth.credentials };
     },
   });
