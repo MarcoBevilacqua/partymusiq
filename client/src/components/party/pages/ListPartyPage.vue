@@ -5,13 +5,6 @@
       <div>
         <span>Whoop, seems like you have no party</span>
       </div>
-      <div>
-        <a
-          @click="goToCreateParty"
-          class="cursor-pointer rounded-md text-indigo-600 text-sm font-semibold"
-          >Create Party</a
-        >
-      </div>
     </div>
   </page-layout>
   <page-layout title="Party from your friends">
@@ -80,10 +73,6 @@ export default {
         .catch((err) => {
           console.warn("AN ERROR OCCURRED: " + err);
         });
-    },
-    goToCreateParty() {
-      console.log("create party");
-      this.$router.push("/party/add");
     },
   },
   mounted() {
