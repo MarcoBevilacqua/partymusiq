@@ -14,7 +14,7 @@ const PartySchema = {
       .error((errors) => {
         return errors;
       }),
-    host: Joi.string()
+    mood: Joi.number()
       .required()
       .error((errors) => {
         return errors;

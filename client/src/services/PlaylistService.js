@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axiosConfig";
 
 export async function searchMusicForPlaylist(search) {
   const response = await axios.get("/api/mu?search=" + search);
@@ -6,8 +6,16 @@ export async function searchMusicForPlaylist(search) {
 }
 
 export async function addSongToPlaylist(partyId, songList) {
-  const response = await axios.put("/api/party/" + partyId, {
+  const response = await axios.post("/api/playlist/" + partyId, {
     playlist: songList,
   });
   return response.data;
+}
+
+export async function removeSongFromPlaylist(partyId, songId) {
+  console.log("removing " + songId);
+  const response = await axios.delete(
+    "/api/playlist/" + partyId + "/r/" + songId
+  );
+  return response;
 }

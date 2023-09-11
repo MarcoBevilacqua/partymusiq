@@ -1,47 +1,92 @@
 <template>
   <div class="relative px-6 lg:px-8">
-    <div class="mx-auto max-w-2xl py-32 sm:py-42 lg:py-48">
+    <div class="mx-auto max-w-2xl pt-12 pb-4 sm:pt-2 sm:pb-4 lg:pt-12 lg:pb-4">
       <div class="hidden sm:mb-8 sm:flex sm:justify-center">
         <div class="relative py-1 px-3 text-sm leading-6 text-gray-600">
           <h2
-            class="text-4xl font-bold tracking-tight text-gray-900 sm:text-4xl"
+            class="text-4xl font-light tracking-tight text-gray-900 sm:text-4xl"
           >
-            Hi, welcome to {{ this.party.title }}
+            Welcome to
+            <span class="font-bold text-gray-400">{{ this.party.title }}</span>
           </h2>
-          <div id="player">
-            <div class="mt-2">
-              <div id="playlist">
-                <playlist :playlist="this.party.playlist"></playlist>
-              </div>
-            </div>
-          </div>
+          <small v-if="!this.party.invitation"
+            >There is no one here
+            <router-link
+              class="text-indigo-600 font-bold"
+              :to="this.party._id + '/invite'"
+              >Add someone!</router-link
+            ></small
+          >
+          <small v-else
+            >{{ this.party.invitation.length }} people having fun right now!
+            <router-link
+              class="text-indigo-600 font-bold"
+              :to="this.party._id + '/invite'"
+              >Invite some more!</router-link
+            >
+          </small>
         </div>
       </div>
     </div>
-    <div class="text-center w-full">
-      <router-link to="/">
-        <button
-          class="bg-gray-300 text-gray-800 hover:bg-gray-400 px-4 py-2 rounded-md"
-        >
-          Go Back
-        </button>
-      </router-link>
+    <!-- START PARTY PLAYER -->
+    <div class="grid grid-cols-3 text-center w-full">
+      <player
+        class="col-span-2"
+        v-if="this.party.playlist"
+        @switch-mode-to-add="switchMode"
+      ></player>
+      <!-- END PARTY PLAYER -->
+
+      <!-- START INVITE LIST  -->
+      <div v-if="this.party.invitation" class="col-span-1">
+        <h2 class="font-semibold">Invitation</h2>
+        <ul>
+          <li v-for="invitation in this.party.invitation">
+            {{ invitation.name }}
+          </li>
+        </ul>
+      </div>
+      <!-- END INVITE LIST  -->
+
+      <!-- START MUSIC SEARCH  -->
+      <music-search
+        v-if="this.mode === 'add'"
+        @add-to-playlist="this.addSong"
+      ></music-search>
+      <!-- START MUSIC SEARCH  -->
     </div>
+  </div>
+  <div class="mt-4 text-center w-full">
+    <router-link to="/party">
+      <button
+        class="bg-gray-300 text-gray-800 hover:bg-gray-400 px-4 py-2 rounded-md"
+      >
+        Go Back
+      </button>
+    </router-link>
   </div>
 </template>
 
 <script>
 import { getSingleParty } from "../../../services/PartyService";
+
 import BaseLayout from "../../../base/BaseLayout.vue";
-import Playlist from "../../playlist/Playlist.vue";
+import Player from "../../shared/Player.vue";
+import MusicSearch from "../../shared/MusicSearch.vue";
+
+//constants
+import Party from "../../../constants/Party";
 export default {
   components: {
     BaseLayout,
-    Playlist,
+    Player,
+    MusicSearch,
   },
   data() {
     return {
       party: {},
+      canAddSong: false,
+      mode: Party.PartyMode.MODE_LIST,
     };
   },
   methods: {
@@ -49,6 +94,10 @@ export default {
       getSingleParty(id).then((response) => {
         this.party = response;
       });
+    },
+    switchMode(mode) {
+      console.log("switching to " + mode);
+      this.mode = mode;
     },
   },
   mounted() {
