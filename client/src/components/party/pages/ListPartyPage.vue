@@ -3,12 +3,22 @@
     <party-list-item v-if="parties.length" :parties="parties"></party-list-item>
     <div v-else class="mx-auto w-1/2 items-center text-center">
       <div>
-        <span>Whoop, seems like you have no party</span>
+        <span>Whoop, seems like you have no party</span>  
+        <div class="w-full mt-2 text-center leading-6 text-gray-600 font-bolder">
+          <div class="w-1/3 mx-auto text-indigo-600 bg-white-100">
+            <router-link
+              to="/party/add"
+              class="cursor-pointer hover:underline text-md px-2"
+            >
+              <span class="mx-auto">Create new party</span>
+            </router-link>
+          </div>
+        </div>              
       </div>
     </div>
   </page-layout>
   <page-layout title="Party from your friends">
-    <invitation-list-item :invitations="invitations"></invitation-list-item>
+    <invitation-list :invitations="invitations"></invitation-list>
   </page-layout>
 </template>
 
@@ -17,12 +27,12 @@ import PageLayout from "../../../base/PageLayout.vue";
 import { getAllParties } from "../../../services/PartyService";
 import { getInvitations } from "../../../services/InvitationService";
 import PartyListItem from "../PartyList.vue";
-import InvitationListItem from "../../invitation/InvitationList.vue";
+import InvitationList from "../../invitation/InvitationList.vue";
 export default {
   components: {
     PageLayout,
     PartyListItem,
-    InvitationListItem,
+    InvitationList,
   },
   data() {
     return {
