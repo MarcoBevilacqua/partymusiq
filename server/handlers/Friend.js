@@ -40,31 +40,30 @@ module.exports = {
       {
         user: request.auth.credentials.username,
       },
-      { projection: { "friends.username": 1 } }
-    );
+      { projection: { "friends.username": 1, "friends._id": 1} }
+    ) || {};
 
-    console.log(userFriends);
-
-    let users = await request.mongo.db
-      .collection("users")
-      .find(
-        {
-          username: { $ne: request.auth.credentials.username },
-        },
-        { projection: { _id: 0, password: 0 } }
-      )
-      .limit(50)
-      .toArray();
-
-    console.log(users);
-
-    if (!userFriends.friends || !userFriends.friends.length) {
+    //if user does not have friends, return a bunch of users
+    if(!userFriends.hasOwnProperty("friends")) {
       console.log("No friends retrieved, returning all users...");
-      return users;
+      return await request.mongo.db.collection("users")
+        .find({          
+          username: { $ne: request.auth.credentials.username }
+        })
+        .limit(25)
+        .toArray()
     }
-
-    return users.filter((u) => {
-      return !userFriends.friends.map((uf) => uf.username).includes(u.username);
-    });
+    
+    //users has some friends, show non friends
+    return await request.mongo.db.collection("users")
+      .find({          
+        username: { $ne: request.auth.credentials.username },
+        username: { $nin: userFriends.friends.username }
+      }, 
+      {
+        projection: {username: 1, _id: 1}
+      })
+      .limit(25)
+      .toArray()    
   },
 };

@@ -7,8 +7,8 @@ WORKDIR /usr/src/app
 RUN npm install -g nodemon
 
 # Install app dependencies
-ADD package.json ./
-COPY package-lock.json ./
+ADD ./server/package.json ./
+COPY ./server/package-lock.json ./
 RUN npm i --silent
 
 # Copy in the source

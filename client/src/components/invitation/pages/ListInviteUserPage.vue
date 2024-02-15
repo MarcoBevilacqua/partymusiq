@@ -1,7 +1,10 @@
 <template>
+  <div v-if="!this.usersForParty">  
+    <span>No invitation yet</span>
+  </div>
   <div
-    v-if="this.users.length"
-    v-for="user in this.users"
+    v-if="this.usersForParty && this.usersForParty.length"
+    v-for="user in this.usersForParty"
     :key="user._id"
     class="w-1/4 p-2"
   >
@@ -18,8 +21,8 @@
           >Invite To party</a
         >
       </div>
-    </div>
-  </div>
+    </div>    
+</div>
 </template>
 
 <script>
@@ -27,7 +30,7 @@ import { createInvitation } from "../../../services/InvitationService";
 
 export default {
   props: {
-    users: Array,
+    usersForParty: Array,
   },
   methods: {
     askFriend(userId) {

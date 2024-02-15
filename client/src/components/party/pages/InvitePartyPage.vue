@@ -1,6 +1,8 @@
 <template>
   <page-layout title="Invite to party">
-    <list-invite-party-page :users="this.users"></list-invite-party-page>
+    <list-invite-party-page
+      :usersForParty="this.usersForParty"
+    ></list-invite-party-page>
   </page-layout>
 </template>
 
@@ -15,18 +17,18 @@ export default {
   },
   data() {
     return {
-      users: [],
+      usersForParty: [],
     };
   },
   methods: {
-    getAllUsers() {
+    getUsersForParty() {
       getAvailableForParty(this.$route.params.id).then((res) => {
-        this.users = res.friends;
+        this.usersForParty = res;
       });
     },
   },
   mounted() {
-    this.getAllUsers();
+    this.getUsersForParty();
   },
 };
 </script>

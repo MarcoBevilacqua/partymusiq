@@ -1,10 +1,15 @@
 "use strict";
-const dateOptions = { weekday: "short", year: "numeric", month: "long", day: "numeric" };
+const dateOptions = {
+  weekday: "short",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+};
 
 module.exports = {
   getInvitations: async (request, h) => {
     const offset = Number(request.query.offset) || 0;
-
+    console.log("Getting all invitations...");
     return await request.mongo.db
       .collection("invitations")
       .find({
@@ -20,46 +25,51 @@ module.exports = {
     const ObjectID = request.mongo.ObjectID;
     const partyId = request.params.partyId;
 
+    console.log(
+      `Getting all friends not invited in party with ID ${partyId}...  `
+    );
+    //get all invitation for the party
     const invitations = await request.mongo.db
       .collection("invitations")
       .find(
         {
           "party._id": ObjectID(partyId),
         },
-        { projection: { "user._id": 1 } }
+        { projection: { user: 1 } }
       )
-      .limit(20)
+      .limit(25)
       .toArray();
 
-    let alreadyInvited = invitations.length ? invitations.map((i) => i.user._id) : [];
+    let alreadyInvited = invitations.length
+      ? invitations.map((i) => i.user)
+      : [];
+    console.log("Already invited: ", alreadyInvited);
 
-    const friendsToInvite = await request.mongo.db.collection("friends").findOne(
-      {
+    //no invitation yet, return all friends
+    if (!invitations || !invitations.length) {
+      console.log("No invitation whatsoever, retrieving all friends...");
+      return (
+        (await request.mongo.db.collection("friends").findOne(
+          {
+            user: request.auth.credentials.username,
+          },
+          { projection: { friends: 1 } }
+        )) || []
+      );
+    }
+
+    const friendsToInvite =
+      (await request.mongo.db.collection("friends").findOne({
         user: request.auth.credentials.username,
-      },
-      { projection: { friends: 1 } }
-    );
+        _id: { $nin: alreadyInvited },
+      })) || [];
+
+    console.log("friends to invite: ", friendsToInvite);
 
     if (!friendsToInvite.friends || !friendsToInvite.friends.length) {
       console.log("no friends in " + friendsToInvite.friends);
-      return [];
+      return friendsToInvite;
     }
-
-    // try {
-    //   const toInvite = await request.mongo.db
-    //     .collection("friends")
-    //     .aggregate([
-    //       { $match: { user: request.auth.credentials.username } },
-    //       { $unwind: "$friends" },
-    //       { $addFields: { "friends.invited": 1 } },
-    //       { $project: { friends: 1 } },
-    //     ])
-    //     .toArray();
-
-    //   console.log(toInvite);
-    // } catch (err) {
-    //   console.warn(err);
-    // }
 
     return friendsToInvite.friends.map((ftv) => {
       return { ...ftv, invited: !alreadyInvited.includes(ftv) };
@@ -77,7 +87,9 @@ module.exports = {
     );
 
     if (!user) {
-      return h.response("Invalid User from user id " + request.payload.user).code(400);
+      return h
+        .response("Invalid User from user id " + request.payload.user)
+        .code(400);
     }
 
     const party = await request.mongo.db.collection("parties").findOne(
@@ -88,7 +100,9 @@ module.exports = {
     );
 
     if (!party) {
-      return h.response("Invalid Party from party id " + request.params.partyId).code(400);
+      return h
+        .response("Invalid Party from party id " + request.params.partyId)
+        .code(400);
     }
 
     return await request.mongo.db.collection("invitations").updateOne(
@@ -107,12 +121,14 @@ module.exports = {
     const invitationId = request.params.invitationId;
     console.log("update invitation with ID " + invitationId);
     const ObjectID = request.mongo.ObjectID;
-    const updatedInvitation = request.mongo.db.collection("invitations").findOneAndUpdate(
-      {
-        _id: { $eq: new ObjectID(invitationId) },
-      },
-      { $addToSet: { "invitation.$.status": request.payload.status } }
-    );
+    const updatedInvitation = request.mongo.db
+      .collection("invitations")
+      .findOneAndUpdate(
+        {
+          _id: { $eq: new ObjectID(invitationId) },
+        },
+        { $addToSet: { "invitation.$.status": request.payload.status } }
+      );
     return updatedInvitation;
   },
 };
