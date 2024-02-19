@@ -1,7 +1,7 @@
 var Mongoose = require("mongoose");
 
 //load database
-Mongoose.connect("mongodb://localhost:27018/partymusiq");
+Mongoose.connect("mongodb://mongodb:27017/partymusiq");
 var db = Mongoose.connection;
 
 db.on("error", console.error.bind(console, "connection error"));

@@ -8,7 +8,7 @@ const errorHelper = require("./common/Errors");
 const init = async () => {
   const server = Hapi.server({
     port: 3000,
-    host: "localhost",
+    host: "0.0.0.0",
     routes: {
       cors: true,
     },
@@ -19,7 +19,7 @@ const init = async () => {
   await server.register({
     plugin: require("hapi-mongodb"),
     options: {
-      url: "mongodb://localhost:27018/partymusiq",
+      url: "mongodb://mongodb:27017/partymusiq",
       settings: {
         useUnifiedTopology: true,
       },
