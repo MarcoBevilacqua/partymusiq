@@ -18,7 +18,10 @@ module.exports = {
     const ObjectID = request.mongo.ObjectID;
     const friend = await request.mongo.db
       .collection("users")
-      .findOne({ _id: new ObjectID(request.payload.user) }, { projection: { _id: 1, username: 1 } });
+      .findOne(
+        { _id: new ObjectID(request.payload.user) },
+        { projection: { _id: 1, username: 1 } }
+      );
 
     if (!friend) {
       return h.response("No user found").code(400);
@@ -36,34 +39,39 @@ module.exports = {
   },
 
   getNonFriends: async (request, h) => {
-    const userFriends = await request.mongo.db.collection("friends").findOne(
-      {
-        user: request.auth.credentials.username,
-      },
-      { projection: { "friends.username": 1, "friends._id": 1} }
-    ) || {};
+    console.log("gettin NON friends...");
+    const userFriends =
+      (await request.mongo.db.collection("friends").findOne(
+        {
+          user: request.auth.credentials.username,
+        },
+        { projection: { "friends.username": 1, "friends._id": 1 } }
+      )) || {};
 
     //if user does not have friends, return a bunch of users
-    if(!userFriends.hasOwnProperty("friends")) {
+    if (!userFriends.hasOwnProperty("friends")) {
       console.log("No friends retrieved, returning all users...");
-      return await request.mongo.db.collection("users")
-        .find({          
-          username: { $ne: request.auth.credentials.username }
+      return await request.mongo.db
+        .collection("users")
+        .find({
+          username: { $ne: request.auth.credentials.username },
         })
         .limit(25)
-        .toArray()
+        .toArray();
     }
-    
+
     //users has some friends, show non friends
-    return await request.mongo.db.collection("users")
-      .find({          
-        username: { $ne: request.auth.credentials.username },
-        username: { $nin: userFriends.friends.username }
-      }, 
-      {
-        projection: {username: 1, _id: 1}
+    const nonFriends = await request.mongo.db
+      .collection("users")
+      .find({
+        username: {
+          $ne: request.auth.credentials.username,
+          $nin: userFriends.friends.map((f) => f.username),
+        },
       })
       .limit(25)
-      .toArray()    
+      .toArray();
+
+    return await nonFriends;
   },
 };
