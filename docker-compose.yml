@@ -1,15 +1,16 @@
 version: "2"
 services:
   mongo:
+    container_name: mongodb
     image: mongo
     ports:
       - "27018:27017"
   server:
     build:
-      context: ./
-    command: nodemon index.js
+      context: .
+    command: nodemon --legacy-watch index.js
     volumes:
-      - .:/usr/src/app
+      - ./server/:/usr/src/app
       - /usr/src/app/node_modules
     ports:
       - "3000:3000"

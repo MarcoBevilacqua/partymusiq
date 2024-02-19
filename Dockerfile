@@ -12,7 +12,7 @@ COPY ./server/package-lock.json ./
 RUN npm i --silent
 
 # Copy in the source
-COPY . .
+COPY ./server .
 
 # Don't use root user
 USER node
@@ -21,4 +21,4 @@ USER node
 EXPOSE 3000
 
 # Run the app
-CMD ["node", "index.js"]
+CMD ["nodemon", "--legacy-watch", "index.js"]
