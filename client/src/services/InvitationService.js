@@ -25,3 +25,8 @@ export async function getAvailableForParty(partyId) {
   const response = await axios.get("api/invitation/" + partyId);
   return response.data;
 }
+
+export async function getFriendsForParty(partyId) {
+  const response = await axios.get(`api/invitation/${partyId}/friends`);
+  return response.data;
+}

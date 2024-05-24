@@ -21,8 +21,12 @@ module.exports = {
     const ObjectID = request.mongo.ObjectID;
     const party = await request.mongo.db
       .collection("parties")
-      .findOne({ _id: new ObjectID(id) }, { projection: { title: 1, description: 1, playlist: 1, invitation: 1 } });
-    return party;
+      .findOne(
+        { _id: new ObjectID(id) },
+        { projection: { title: 1, description: 1, playlist: 1, invitation: 1 } }
+      );
+
+    return { party };
   },
 
   createParty: async (request, h) => {
@@ -48,7 +52,9 @@ module.exports = {
   deleteParty: async (request, h) => {
     const id = request.params.id;
     const ObjectID = request.mongo.ObjectID;
-    const status = await request.mongo.db.collection("parties").deleteOne({ _id: ObjectID(id) });
+    const status = await request.mongo.db
+      .collection("parties")
+      .deleteOne({ _id: ObjectID(id) });
     return status;
   },
 };

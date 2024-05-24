@@ -39,14 +39,16 @@ module.exports = {
   },
 
   getNonFriends: async (request, h) => {
-    console.log("gettin NON friends...");
-    const userFriends =
-      (await request.mongo.db.collection("friends").findOne(
+    const userFriends = await request.mongo.db
+      .collection("friends")
+      .find(
         {
           user: request.auth.credentials.username,
         },
         { projection: { "friends.username": 1, "friends._id": 1 } }
-      )) || {};
+      )
+      .limit(25)
+      .toArray();
 
     //if user does not have friends, return a bunch of users
     if (!userFriends.hasOwnProperty("friends")) {
@@ -59,6 +61,8 @@ module.exports = {
         .limit(25)
         .toArray();
     }
+
+    console.log("gettin NON friends...");
 
     //users has some friends, show non friends
     const nonFriends = await request.mongo.db

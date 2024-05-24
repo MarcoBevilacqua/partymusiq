@@ -9,7 +9,7 @@
             Welcome to
             <span class="font-bold text-gray-400">{{ this.party.title }}</span>
           </h2>
-          <small v-if="!this.party.invitation"
+          <small v-if="!this.party.invitations"
             >There is no one here
             <router-link
               class="text-indigo-600 font-bold"
@@ -18,10 +18,11 @@
             ></small
           >
           <small v-else
-            >{{ this.party.invitation.length }} people having fun right now!
+            >{{ this.party.invitations.user.length }} people having fun right
+            now!
             <router-link
               class="text-indigo-600 font-bold"
-              :to="this.party._id + '/invite'"
+              :to="this.party.party._id + '/invite'"
               >Invite some more!</router-link
             >
           </small>
@@ -68,7 +69,7 @@
 </template>
 
 <script>
-import { getSingleParty } from "../../../services/PartyService";
+import { getSingleParty } from "@/services/PartyService";
 
 import BaseLayout from "../../../base/BaseLayout.vue";
 import Player from "../../shared/Player.vue";
@@ -92,7 +93,7 @@ export default {
   methods: {
     getSingleParty(id) {
       getSingleParty(id).then((response) => {
-        this.party = response;
+        this.party = response.party;
       });
     },
     switchMode(mode) {

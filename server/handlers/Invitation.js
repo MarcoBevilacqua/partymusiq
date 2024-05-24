@@ -1,16 +1,23 @@
 "use strict";
-const dateOptions = {
-  weekday: "short",
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-};
+
+const friendsHandler = require("../handlers/Friend");
 
 module.exports = {
+  /**
+   * get all invitations
+   *
+   * @param {*} request
+   * @param {*} h
+   * @returns {Array}
+   */
   getInvitations: async (request, h) => {
+    let invitations,
+      uninvitedFriends,
+      users = [];
+
     const offset = Number(request.query.offset) || 0;
     console.log("Getting all invitations...");
-    return await request.mongo.db
+    invitations = await request.mongo.db
       .collection("invitations")
       .find({
         "party.starting": { $gt: new Date() },
@@ -19,6 +26,37 @@ module.exports = {
       .skip(offset)
       .limit(20)
       .toArray();
+
+    console.log("Invitations: ", invitations);
+
+    // get uninvited friends list
+    uninvitedFriends = await friendsHandler.getAllFriends(request).then((f) => {
+      console.log("F: ", f);
+      return f.map((ftv) => {
+        return { ...ftv, invited: !alreadyInvited.includes(ftv) };
+      });
+    });
+
+    console.log("UninvitedFriends: ", uninvitedFriends);
+
+    // get users list
+    users = await friendsHandler.getNonFriends(request).then((nf) => {
+      console.log("NON FRIENDS: ", nf);
+      return nf.map((nonFriend) => {
+        return {
+          ...nonFriend,
+          users:
+            !uninvitedFriends.includes(nonFriend) &&
+            !invitations.includes(nonFriend),
+        };
+      });
+    });
+
+    return {
+      invitations: invitations,
+      uninvitedFriends: uninvitedFriends,
+      users: users,
+    };
   },
 
   getUsersToInvite: async (request, h) => {
@@ -57,14 +95,6 @@ module.exports = {
         )) || []
       );
     }
-
-    const friendsToInvite =
-      (await request.mongo.db.collection("friends").findOne({
-        user: request.auth.credentials.username,
-        _id: { $nin: alreadyInvited },
-      })) || [];
-
-    console.log("friends to invite: ", friendsToInvite);
 
     if (!friendsToInvite.friends || !friendsToInvite.friends.length) {
       console.log("no friends in " + friendsToInvite.friends);
