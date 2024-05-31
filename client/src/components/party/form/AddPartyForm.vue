@@ -1,60 +1,63 @@
 <template>
   <form @submit.prevent="createParty">
-    <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
-        Title
-      </label>
-      <input
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        id="title"
-        type="text"
-        placeholder="Party Title"
-        v-model="title"
-      />
-    </div>
-    <div class="grid grid-cols-3 gap-2 mb-6">
-      <div class="col-span-2">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-2"
-          for="password"
-        >
-          Start at:
+    <fieldset>
+      <h2 class="text-xl font-bold">Fill in the form</h2>
+      <div class="mt-6 mb-12">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+          Title
         </label>
-        <date-picker
-          v-model="startingRaw"
-          :model-value="startingRaw"
-          @update:model-value="formatDate"
+        <input
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="title"
+          type="text"
+          placeholder="Party Title"
+          v-model="title"
         />
       </div>
-      <div class="col-span-1">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="mood">
-          Mood:
-        </label>
-        <select
-          class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-          name="mood"
-          id="mood"
-          v-model="mood"
-        >
-          <option value="-1">No mood selected</option>
-          <option
-            v-for="mood in availableMoods"
-            :key="mood.id"
-            :value="mood.id"
+      <div class="grid grid-cols-3 gap-2 mb-12">
+        <div class="col-span-2">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="password"
           >
-            {{ mood.title }}
-          </option>
-        </select>
+            Start at:
+          </label>
+          <date-picker
+            v-model="startingRaw"
+            :model-value="startingRaw"
+            @update:model-value="formatDate"
+          />
+        </div>
+        <div class="col-span-1">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="mood">
+            Mood:
+          </label>
+          <select
+            class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+            name="mood"
+            id="mood"
+            v-model="mood"
+          >
+            <option value="-1">No mood selected</option>
+            <option
+              v-for="mood in availableMoods"
+              :key="mood.id"
+              :value="mood.id"
+            >
+              {{ mood.title }}
+            </option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="">
-      <button
-        class="w-full bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        type="submit"
-      >
-        Save
-      </button>
-    </div>
+      <div class="">
+        <button
+          class="w-full bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          Save
+        </button>
+      </div>
+    </fieldset>
   </form>
 </template>
 

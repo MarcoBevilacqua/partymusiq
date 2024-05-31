@@ -6,19 +6,7 @@ module.exports = {
   name: "invitation controller",
   register: async (server, options) => {
     /**
-     * Get all invitation for party
-     */
-    server.route({
-      method: "GET",
-      path: "/invitation",
-      options: {
-        auth: { mode: "try" },
-      },
-      handler: invitationHandler.getInvitations,
-    });
-
-    /**
-     * Get all user available for party
+     * Get all invitation to party
      */
     server.route({
       method: "GET",
@@ -26,9 +14,8 @@ module.exports = {
       options: {
         auth: { mode: "try" },
       },
-      handler: invitationHandler.getUsersToInvite,
+      handler: invitationHandler.getInvitations,
     });
-
     /**
      * invite user to party
      */

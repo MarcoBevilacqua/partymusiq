@@ -1,5 +1,6 @@
 "use strict";
 
+const Invitation = require("../controllers/Invitation");
 const friendsHandler = require("../handlers/Friend");
 
 module.exports = {
@@ -11,6 +12,8 @@ module.exports = {
    * @returns {Array}
    */
   getInvitations: async (request, h) => {
+    const ObjectID = request.mongo.ObjectID;
+    let partyId = request.params.partyId;
     let invitations,
       uninvitedFriends,
       users = [];
@@ -19,29 +22,27 @@ module.exports = {
     console.log("Getting all invitations...");
     invitations = await request.mongo.db
       .collection("invitations")
-      .find({
-        "party.starting": { $gt: new Date() },
-        "user.username": request.auth.credentials.username,
-      })
+      .find(
+        { "party._id": ObjectID(partyId) },
+        { projection: { "user.username": 1 } }
+      )
       .skip(offset)
       .limit(20)
       .toArray();
 
-    console.log("Invitations: ", invitations);
+    console.log("INVITATIONS: ", invitations);
 
     // get uninvited friends list
-    uninvitedFriends = await friendsHandler.getAllFriends(request).then((f) => {
-      console.log("F: ", f);
-      return f.map((ftv) => {
-        return { ...ftv, invited: !alreadyInvited.includes(ftv) };
+    uninvitedFriends = await friendsHandler
+      .getAllFriends(request)
+      .then((uninvitedFriends) => {
+        return uninvitedFriends.friends;
       });
-    });
 
     console.log("UninvitedFriends: ", uninvitedFriends);
 
     // get users list
     users = await friendsHandler.getNonFriends(request).then((nf) => {
-      console.log("NON FRIENDS: ", nf);
       return nf.map((nonFriend) => {
         return {
           ...nonFriend,

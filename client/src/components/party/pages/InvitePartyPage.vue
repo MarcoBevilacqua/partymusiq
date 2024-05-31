@@ -1,7 +1,18 @@
 <template>
-  <page-layout title="Invite to party">
+  <page-layout title="Invite your friends to party">
     <list-invite-party-page
-      :usersForParty="this.usersForParty"
+      :usersForParty="this.usersForParty.invitations"
+      :title="'INVITATIONS'"
+      @user-invited="this.setInvitedUser"
+    ></list-invite-party-page>
+    <list-invite-party-page
+      :usersForParty="this.usersForParty.uninvitedFriends"
+      :title="'UNINVITED FRIENDS'"
+      @user-invited="this.setInvitedUser"
+    ></list-invite-party-page>
+    <list-invite-party-page
+      :title="'USERS'"
+      :users-for-party="this.usersForParty.users"
       @user-invited="this.setInvitedUser"
     ></list-invite-party-page>
   </page-layout>
@@ -10,10 +21,7 @@
 <script>
 import PageLayout from "../../../base/PageLayout.vue";
 import ListInvitePartyPage from "../../invitation/pages/ListInviteUserPage.vue";
-import {
-  getAvailableForParty,
-  getFriendsForParty,
-} from "../../../services/InvitationService";
+import { getInvitations } from "../../../services/InvitationService";
 export default {
   components: {
     PageLayout,
@@ -21,20 +29,14 @@ export default {
   },
   data() {
     return {
-      usersForParty: [],
-      friendsForParty: [],
+      usersForParty: {},
     };
   },
   methods: {
     getUsersForParty() {
-      getAvailableForParty(this.$route.params.id).then((res) => {
+      getInvitations(this.$route.params.id).then((res) => {
+        console.log("get available for party: ", res);
         this.usersForParty = res;
-        console.log(this.usersForParty);
-      });
-    },
-    getFriendsForParty() {
-      getFriendsForParty(this.$route.params.id).then((res) => {
-        this.friendsForParty = res;
         console.log(this.usersForParty);
       });
     },
@@ -44,8 +46,7 @@ export default {
     },
   },
   mounted() {
-    // this.getUsersForParty();
-    // this.getFriendsForParty();
+    this.getUsersForParty();
   },
 };
 </script>

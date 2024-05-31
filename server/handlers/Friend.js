@@ -4,14 +4,12 @@ module.exports = {
   getAllFriends: async (request, h) => {
     const offset = Number(request.query.offset) || 0;
 
-    return await request.mongo.db
-      .collection("friends")
-      .find({
-        "user.username": request.auth.credentials.username,
-      })
-      .skip(offset)
-      .limit(20)
-      .toArray();
+    return await request.mongo.db.collection("friends").findOne(
+      {
+        user: request.auth.credentials.username,
+      },
+      { friends: 1 }
+    );
   },
 
   addFriend: async (request, h) => {

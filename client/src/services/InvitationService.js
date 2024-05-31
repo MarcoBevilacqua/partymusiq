@@ -1,7 +1,7 @@
 import axios from "axios";
 import Invitation from "../constants/Invitation";
-export async function getInvitations() {
-  const response = await axios.get("/api/invitation");
+export async function getInvitations(partyId) {
+  const response = await axios.get("/api/invitation/" + partyId);
   return response.data;
 }
 

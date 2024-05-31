@@ -1,6 +1,6 @@
 <template>
   <page-layout title="Create new party">
-    <div class="w-full border bg-white rounded px-8 pt-6 pb-8 mb-4">
+    <div class="w-1/3 mx-auto border bg-white rounded px-8 py-8 mb-4">
       <add-party-form></add-party-form>
     </div>
   </page-layout>
