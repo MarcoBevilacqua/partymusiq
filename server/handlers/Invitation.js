@@ -22,10 +22,7 @@ module.exports = {
     console.log("Getting all invitations...");
     invitations = await request.mongo.db
       .collection("invitations")
-      .find(
-        { "party._id": ObjectID(partyId) },
-        { projection: { "user.username": 1 } }
-      )
+      .find({ "party._id": ObjectID(partyId) }, { projection: { username: 1 } })
       .skip(offset)
       .limit(20)
       .toArray();
@@ -36,7 +33,10 @@ module.exports = {
     uninvitedFriends = await friendsHandler
       .getAllFriends(request)
       .then((uninvitedFriends) => {
-        return uninvitedFriends.friends;
+        let invitationsIds = invitations.map((i) => i.username);
+        return uninvitedFriends.friends.filter((f) => {
+          return !invitationsIds.includes(f.username);
+        });
       });
 
     console.log("UninvitedFriends: ", uninvitedFriends);
@@ -137,7 +137,7 @@ module.exports = {
     }
 
     return await request.mongo.db.collection("invitations").updateOne(
-      { user: user },
+      { username: user.username },
       {
         $set: {
           status: request.payload.status,
